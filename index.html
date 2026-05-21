@@ -1,0 +1,1439 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Pagurai — Mid-Fi</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Brand */
+    --navy: #1E293E;          /* 60% */
+    --navy-2:#26314A;
+    --navy-3:#2F3B57;
+    --line: rgba(255,255,255,0.08);
+    --line-strong: rgba(255,255,255,0.16);
+    --ink-on-navy:#FFFFFF;
+    --ink-soft:#B7C0D1;
+    --ink-mute:#7C879C;
+
+    --blue:    #0098FF;       /* 15% primary */
+    --blue-2:  #0360AB;       /* 15% secondary */
+    --pink:    #E72175;       /* 10% accent */
+
+    --paper:   #F4F6FA;
+    --paper-2: #E8ECF3;
+
+    --radius: 14px;
+    --radius-sm: 10px;
+
+    --f-display: 'Montserrat', system-ui, sans-serif;
+    --f-head:    'Poppins',    system-ui, sans-serif;
+    --f-body:    'Inter',      system-ui, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#0F1726;color:var(--ink-on-navy);font-family:var(--f-body); -webkit-font-smoothing:antialiased;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(0,152,255,0.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(231,33,117,0.08), transparent 60%),
+      #0F1726;
+    min-height:100vh;
+    padding: 28px 24px 96px;
+  }
+
+  /* —— Topbar / tabs —— */
+  .topbar{
+    max-width:1280px; margin: 0 auto 22px; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;
+  }
+  .brand{
+    font-family:var(--f-display); font-weight:800; letter-spacing:-0.02em; font-size:22px; display:flex; align-items:center; gap:10px;
+  }
+  .brand .logo{
+    width:30px; height:30px; border-radius:8px; position:relative;
+    background:
+      conic-gradient(from 210deg at 50% 50%, var(--blue), var(--pink), var(--blue-2), var(--blue));
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.08);
+  }
+  .brand .logo::after{
+    content:""; position:absolute; inset:6px; background:var(--navy); border-radius:4px;
+  }
+  .brand .logo::before{
+    content:""; position:absolute; left:50%; top:50%; width:8px; height:8px; transform:translate(-50%,-50%);
+    background:var(--blue); border-radius:2px;
+  }
+  .brand small{ font-family:var(--f-body); font-weight:500; font-size:11px; color:var(--ink-mute); margin-left:10px; letter-spacing:0.12em; text-transform:uppercase;}
+
+  .tabs{ display:flex; gap:4px; padding:4px; background: rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:999px;}
+  .tab{
+    font-family:var(--f-head); font-weight:600; font-size:13px; letter-spacing:.02em;
+    padding:9px 18px; border-radius:999px; border:none; background:transparent; color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; gap:8px;
+    transition: background .18s ease, color .18s ease;
+  }
+  .tab:hover{ color:#fff; }
+  .tab.active{ background: var(--blue); color:#fff; box-shadow: 0 4px 16px rgba(0,152,255,.35);}
+  .tab .num{ font-family:var(--f-body); font-weight:500; font-size:10px; opacity:.7; }
+  .tab.active .num{ opacity:.9; color:#fff;}
+
+  /* —— Page surface —— */
+  .surface{
+    max-width:1280px; margin: 0 auto; background: var(--navy);
+    border:1px solid var(--line); border-radius: 22px;
+    overflow:hidden; position:relative;
+  }
+  .page-meta{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px 28px; border-bottom:1px solid var(--line); font-family:var(--f-body); font-weight:500;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-mute);
+  }
+  .page-meta .pill{
+    border:1px solid var(--line-strong); padding:4px 10px; border-radius:999px; color:var(--ink-soft); letter-spacing:.12em;
+  }
+
+  /* —— Typography —— */
+  h1.display{
+    font-family:var(--f-display); font-weight:800; letter-spacing:-0.025em; line-height:1.02;
+    font-size: clamp(40px, 5.4vw, 72px); margin:0;
+  }
+  h2.head{
+    font-family:var(--f-head); font-weight:600; letter-spacing:-0.015em; line-height:1.1; margin:0;
+    font-size: clamp(28px, 3.2vw, 40px);
+  }
+  h3.head{
+    font-family:var(--f-head); font-weight:600; letter-spacing:-0.01em; line-height:1.15; margin:0;
+    font-size: 22px;
+  }
+  .eyebrow{
+    font-family:var(--f-body); font-weight:600; font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-mute);
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:""; width:24px; height:1px; background:var(--pink); display:inline-block;
+  }
+  .eyebrow.b::before{ background: var(--blue); }
+  p{ color:var(--ink-soft); line-height:1.55; font-size:15px;}
+
+  /* —— Buttons —— */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; font-family:var(--f-head); font-weight:600; font-size:14px;
+    padding:12px 20px; border-radius:10px; cursor:pointer; text-decoration:none;
+    border:1px solid transparent; transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+  .btn.primary{ background:var(--blue); color:#fff; box-shadow: 0 8px 24px -8px rgba(0,152,255,.55);}
+  .btn.secondary{ background: transparent; color:#fff; border-color: var(--blue-2); }
+  .btn.pink{ background: var(--pink); color:#fff;}
+  .btn.ghost{ background: rgba(255,255,255,0.04); color:#fff; border-color: var(--line-strong);}
+  .btn .arrow{ display:inline-block; transition: transform .15s ease;}
+  .btn:hover .arrow{ transform: translateX(2px);}
+  .btn-row{ display:flex; gap:12px; flex-wrap:wrap;}
+
+  /* —— Cards / primitives —— */
+  .card{
+    background: var(--navy-2);
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    position:relative;
+  }
+  .card.elev{ background: var(--navy-3); }
+  .card.outline{ background: transparent; border:1px dashed var(--line-strong);}
+
+  /* placeholder block */
+  .ph{
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 12px),
+      linear-gradient(180deg, var(--navy-3), var(--navy-2));
+    border-radius: inherit; position:relative; overflow:hidden;
+  }
+  .ph.blue{ background: linear-gradient(135deg, #0098FF 0%, #0360AB 100%); }
+  .ph.pink{ background: linear-gradient(135deg, #E72175 0%, #8C0F49 100%); }
+  .ph.cross{
+    background:
+      linear-gradient(135deg, transparent calc(50% - 1px), rgba(255,255,255,.18) 50%, transparent calc(50% + 1px)),
+      linear-gradient(45deg,  transparent calc(50% - 1px), rgba(255,255,255,.18) 50%, transparent calc(50% + 1px)),
+      linear-gradient(180deg, var(--navy-3), var(--navy-2));
+  }
+  .ph .label{
+    position:absolute; top:10px; left:12px;
+    font-family:var(--f-body); font-weight:600; font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color: rgba(255,255,255,.75);
+  }
+  .ph .label.dark{ color: rgba(255,255,255,.85);}
+
+  /* —— HERO —— */
+  .hero{
+    display:grid; grid-template-columns: 1.05fr 1fr; gap:24px;
+    padding: 48px 56px 40px;
+    align-items:stretch;
+  }
+  .hero .h-left{ display:flex; flex-direction:column; justify-content:center; padding: 32px 0;}
+  .hero .h-left .eyebrow{
+    font-family:var(--f-body); font-weight:600; font-size:12px; letter-spacing:.18em;
+    color: var(--blue); text-transform:uppercase; margin-bottom: 28px; display:inline-block;
+  }
+  .hero .h-left .eyebrow::before{ content:none; }
+  .hero .h-left .display{
+    font-size: clamp(40px, 4.6vw, 60px);
+    line-height:1.0;
+    letter-spacing:-0.02em;
+    text-transform:uppercase;
+    max-width: 14ch;
+  }
+  .hero .h-left .display em{ font-style:normal; color: var(--blue); }
+  .hero .h-left .sub{
+    font-size: 17px; line-height:1.45; max-width: 36ch; margin: 24px 0 36px;
+    color: var(--ink-soft);
+  }
+  .hero .btn.watch{
+    background:transparent; border:none; padding: 12px 4px; color:#fff;
+    font-family:var(--f-head); font-weight:600; font-size:13px; letter-spacing:.12em; text-transform:uppercase;
+  }
+  .hero .btn.watch .play-circle{
+    width:30px; height:30px; border-radius:999px; border:1.5px solid #fff; display:inline-flex; align-items:center; justify-content:center;
+    margin-left:10px;
+  }
+  .hero .btn.watch .play-circle::after{
+    content:""; width:0; height:0; border-left:7px solid #fff; border-top:5px solid transparent; border-bottom:5px solid transparent; margin-left:2px;
+  }
+
+  .hero .h-right{
+    min-height: 440px; border-radius: 8px;
+    position:relative; overflow:hidden;
+    background:
+      linear-gradient(135deg, transparent calc(50% - 1px), rgba(255,255,255,.14) 50%, transparent calc(50% + 1px)),
+      linear-gradient(45deg,  transparent calc(50% - 1px), rgba(255,255,255,.14) 50%, transparent calc(50% + 1px)),
+      var(--navy-3);
+    border: 1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero .h-right .ph-label{
+    font-family:var(--f-body); font-weight:500; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color: var(--ink-mute);
+  }
+
+  /* hero info strip */
+  .hero-strip{
+    border-top:1px solid var(--line);
+    padding: 22px 56px;
+    display:grid; grid-template-columns: repeat(4, 1fr); gap:24px;
+  }
+  .hero-strip .col{ display:flex; flex-direction:column; gap:6px;}
+  .hero-strip .k{
+    font-family:var(--f-body); font-weight:600; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color: var(--blue);
+  }
+  .hero-strip .v{
+    font-family:var(--f-head); font-weight:600; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:#fff;
+  }
+  .play{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:54px; height:54px; border-radius:999px; background: rgba(255,255,255,.9); color: var(--navy);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .play::after{
+    content:""; width:0; height:0; border-left:14px solid var(--navy); border-top:9px solid transparent; border-bottom:9px solid transparent;
+    margin-left:3px;
+  }
+  .stat{
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .stat .k{ font-family:var(--f-display); font-weight:800; font-size:36px; letter-spacing:-0.02em; line-height:1;}
+  .stat .v{ font-family:var(--f-body); font-weight:500; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-mute);}
+  .pill-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:4px 10px; border-radius:999px; font-family:var(--f-body); font-weight:600; font-size:10px;
+    letter-spacing:.14em; text-transform:uppercase; background: rgba(231,33,117,.15); color: var(--pink);
+    border: 1px solid rgba(231,33,117,.35);
+    align-self:flex-start;
+  }
+  .pill-tag.blue{ background: rgba(0,152,255,.12); color: var(--blue); border-color: rgba(0,152,255,.35);}
+  .pill-tag .dot{ width:6px; height:6px; border-radius:99px; background: currentColor;}
+
+  /* mini ad card */
+  .ad-card{
+    background: #fff; color: var(--navy); border-radius: var(--radius-sm);
+    padding:12px; display:flex; flex-direction:column; gap:8px; min-height: 100%;
+  }
+  .ad-card .row{ display:flex; gap:8px; align-items:center;}
+  .ad-card .avatar{ width:26px; height:26px; border-radius:999px; background: linear-gradient(135deg, var(--blue), var(--blue-2));}
+  .ad-card .name{ font-family:var(--f-head); font-weight:600; font-size:11px;}
+  .ad-card .meta{ font-size:9px; color:#7C879C; letter-spacing:.1em; text-transform:uppercase;}
+  .ad-card .img{ flex:1; border-radius:8px; background: repeating-linear-gradient(135deg, #E8ECF3 0 1px, transparent 1px 10px), #F4F6FA; min-height:80px;}
+  .ad-card .copy{ font-size:11px; color:#3A4660; line-height:1.4;}
+  .ad-card .btn-mini{ background: var(--blue); color:#fff; font-family:var(--f-head); font-weight:600; font-size:11px; padding:6px 10px; border-radius:6px; text-align:center;}
+
+  /* —— Section scaffolding —— */
+  .section{ padding: 56px;}
+  .section + .section{ border-top: 1px solid var(--line);}
+  .section-head{ display:flex; justify-content:space-between; align-items:end; gap:24px; flex-wrap:wrap; margin-bottom:28px;}
+  .section-head .lead{ max-width: 56ch;}
+  .section-head .eyebrow{ margin-bottom:10px;}
+  .section-head h2{ margin-top:2px;}
+  .section-head .aside{ color:var(--ink-mute); font-size:13px; max-width: 28ch;}
+
+  /* —— What we do grid —— */
+  .do-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:14px;}
+  .do-tile{
+    background: var(--navy-2); border:1px solid var(--line); border-radius: var(--radius);
+    padding:18px; display:flex; flex-direction:column; justify-content:space-between; min-height: 200px;
+    transition: border-color .2s ease, transform .2s ease, background .2s ease;
+  }
+  .do-tile:hover{ border-color: var(--blue); transform: translateY(-2px); background: var(--navy-3);}
+  .do-tile .ico{
+    width:42px; height:42px; border-radius:10px; background: rgba(0,152,255,.12); color: var(--blue);
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid rgba(0,152,255,.3);
+  }
+  .do-tile .num{ font-family:var(--f-body); font-weight:600; font-size:10px; color: var(--ink-mute); letter-spacing:.2em;}
+  .do-tile .name{ font-family:var(--f-head); font-weight:600; font-size:16px; letter-spacing:-0.01em; line-height:1.25; margin-top:6px;}
+  .do-tile.feat{ background: linear-gradient(160deg, var(--blue) 0%, var(--blue-2) 100%); border-color: transparent;}
+  .do-tile.feat .ico{ background: rgba(255,255,255,.18); color:#fff; border-color: rgba(255,255,255,.3);}
+  .do-tile.feat .num{ color: rgba(255,255,255,.75);}
+  .do-tile.feat .name{ color:#fff;}
+  .do-tile.callout{ background: transparent; border:1px dashed var(--line-strong); justify-content:center; align-items:center; text-align:center;}
+  .do-tile.callout .name{ color: var(--ink-soft);}
+  .do-tile.callout::before{
+    content:"+"; font-family:var(--f-display); font-weight:800; font-size:28px; color:var(--pink); line-height:1;
+  }
+
+  /* —— Portfolio —— */
+  .pf-grid{ display:grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 220px; gap:14px;}
+  .pf{
+    border-radius: var(--radius); overflow:hidden; position:relative; background: var(--navy-2);
+    border: 1px solid var(--line);
+  }
+  .pf .thumb{ position:absolute; inset:0;}
+  .pf .meta{
+    position:absolute; left:0; right:0; bottom:0; padding:16px;
+    background: linear-gradient(180deg, transparent, rgba(15,23,38,.85) 60%);
+    display:flex; justify-content:space-between; align-items:end; gap:12px;
+  }
+  .pf .t{ font-family:var(--f-head); font-weight:600; font-size:15px; color:#fff; line-height:1.2; max-width: 22ch;}
+  .pf .pill-tag{ background: rgba(255,255,255,0.12); color:#fff; border-color: rgba(255,255,255,.22);}
+  .pf.s-2x2{ grid-column: span 2; grid-row: span 2;}
+  .pf.s-2x1{ grid-column: span 2; grid-row: span 1;}
+  .pf.s-3x1{ grid-column: span 3; grid-row: span 1;}
+  .pf.s-1x2{ grid-column: span 1; grid-row: span 2;}
+  .pf.s-2x2 .t, .pf.s-3x1 .t{ font-size:18px;}
+
+  /* —— CTA band —— */
+  .cta-band{
+    margin: 56px; padding: 32px 36px;
+    border-radius: 18px;
+    background:
+      radial-gradient(800px 300px at 80% 50%, rgba(231,33,117,.35), transparent 60%),
+      linear-gradient(135deg, var(--blue) 0%, var(--blue-2) 70%);
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    color:#fff;
+  }
+  .cta-band h3{
+    font-family:var(--f-head); font-weight:600; font-size: clamp(22px, 2.4vw, 30px); letter-spacing:-0.01em; line-height:1.15; max-width: 26ch; margin:0;
+  }
+  .cta-band .btn.primary{ background:#fff; color:var(--navy);}
+  .cta-band .btn.primary:hover{ filter:none; }
+  .cta-band .small{ font-family:var(--f-body); font-size:12px; opacity:.8; letter-spacing:.06em;}
+
+  /* —— Page foot —— */
+  .pg-foot{
+    padding: 18px 28px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap;
+    font-family:var(--f-body); font-weight:500; font-size:11px; color:var(--ink-mute); letter-spacing:.14em; text-transform:uppercase;
+  }
+
+  /* —— SERVICES page —— */
+  .svc-intro{ padding: 56px 56px 24px; max-width: 1080px;}
+  .svc-jump{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 24px;}
+  .chip{
+    background: rgba(255,255,255,0.04); border:1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 8px 14px; border-radius: 999px; font-family:var(--f-head); font-weight:500; font-size:12px;
+    cursor:pointer; transition: all .15s ease;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .chip:hover{ border-color: var(--blue); color:#fff;}
+  .chip .n{ font-family:var(--f-body); font-weight:600; font-size:10px; color:var(--blue); letter-spacing:.1em;}
+
+  .svc-list{ padding: 0 56px 8px; display:flex; flex-direction:column; gap:14px;}
+  .svc{
+    background: var(--navy-2); border:1px solid var(--line); border-radius: var(--radius);
+    position:relative; overflow:hidden;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .svc[data-open="true"]{ border-color: rgba(0,152,255,.35); background: var(--navy-3);}
+  .svc.alt[data-open="true"]{ border-color: rgba(231,33,117,.35);}
+  .svc::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background: var(--blue);
+    opacity:.5; transition: opacity .2s ease;
+  }
+  .svc.alt::before{ background: var(--pink);}
+  .svc[data-open="true"]::before{ opacity:1;}
+
+  .svc-head{
+    width:100%; background:transparent; border:none; color:inherit; text-align:left; cursor:pointer;
+    padding: 22px 26px; display:grid; grid-template-columns: 80px 1.1fr 1fr auto; gap:22px; align-items:center;
+    font-family: inherit;
+  }
+  .svc-head:hover{ background: rgba(255,255,255,0.025);}
+  .svc-head .num-big{
+    font-family:var(--f-display); font-weight:800; font-size:48px; line-height:.9; color: var(--blue); letter-spacing:-0.04em;
+  }
+  .svc.alt .num-big{ color: var(--pink); }
+  .svc-head h3{
+    font-family:var(--f-head); font-weight:600; font-size:22px; letter-spacing:-0.01em; margin: 0 0 4px; color:#fff;
+  }
+  .svc-head .desc{
+    color: var(--ink-soft); font-size:13px; line-height:1.45; max-width: 42ch; margin:0;
+  }
+  .svc-head .tags{ display:flex; flex-wrap:wrap; gap:6px;}
+  .svc-head .tag{
+    font-family:var(--f-body); font-weight:500; font-size:11px; letter-spacing:.06em;
+    padding:5px 10px; border-radius:999px; background: rgba(0,152,255,.10); color: var(--blue);
+    border:1px solid rgba(0,152,255,.28);
+  }
+  .svc.alt .svc-head .tag{ background: rgba(231,33,117,.10); color: var(--pink); border-color: rgba(231,33,117,.28);}
+  .svc-head .chev{
+    width:36px; height:36px; border-radius:999px; border:1px solid var(--line-strong); display:flex; align-items:center; justify-content:center;
+    transition: transform .25s ease, background .2s ease, border-color .2s ease;
+  }
+  .svc[data-open="true"] .svc-head .chev{ background: var(--blue); border-color: var(--blue); transform: rotate(180deg);}
+  .svc.alt[data-open="true"] .svc-head .chev{ background: var(--pink); border-color: var(--pink);}
+  .svc-head .chev::after{
+    content:""; width:8px; height:8px; border-right:2px solid #fff; border-bottom:2px solid #fff; transform: translateY(-2px) rotate(45deg);
+  }
+
+  .svc-body{
+    max-height: 0; overflow: hidden; transition: max-height .4s ease;
+  }
+  .svc-body > .inner{ min-height:0;}
+  .svc[data-open="true"] .svc-body{ max-height: 2400px;}
+  .svc-body .inner-pad{
+    padding: 0 26px 28px 126px;
+    border-top: 1px dashed var(--line);
+    margin-top: 4px; padding-top: 22px;
+  }
+  .svc-body .body-head{
+    display:flex; justify-content:space-between; align-items:end; gap:16px; flex-wrap:wrap; margin-bottom: 16px;
+  }
+  .svc-body .body-head .lbl{
+    font-family:var(--f-body); font-weight:600; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color: var(--ink-mute);
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .svc-body .body-head .lbl::before{
+    content:""; width:18px; height:1px; background:var(--blue);
+  }
+  .svc.alt .svc-body .body-head .lbl::before{ background:var(--pink);}
+  .svc-body .body-head .more{
+    font-family:var(--f-head); font-weight:600; font-size:12px; color: var(--ink-soft); letter-spacing:.06em;
+    display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  }
+  .svc-body .body-head .more:hover{ color:#fff;}
+
+  /* Project cards */
+  .proj-grid{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;
+  }
+  .proj{
+    background: var(--navy); border:1px solid var(--line); border-radius: var(--radius-sm); overflow:hidden;
+    display:flex; flex-direction:column; transition: border-color .2s ease, transform .2s ease;
+  }
+  .proj:hover{ border-color: var(--blue); transform: translateY(-2px);}
+  .svc.alt .proj:hover{ border-color: var(--pink);}
+  .proj .thumb{
+    aspect-ratio: 16/10; position:relative; overflow:hidden;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 12px),
+      linear-gradient(180deg, var(--navy-3), var(--navy-2));
+  }
+  .proj .thumb.cross{
+    background:
+      linear-gradient(135deg, transparent calc(50% - 1px), rgba(255,255,255,.16) 50%, transparent calc(50% + 1px)),
+      linear-gradient(45deg,  transparent calc(50% - 1px), rgba(255,255,255,.16) 50%, transparent calc(50% + 1px)),
+      var(--navy-3);
+  }
+  .proj .thumb.blue{ background: linear-gradient(135deg, #0098FF 0%, #0360AB 100%);}
+  .proj .thumb.pink{ background: linear-gradient(135deg, #E72175 0%, #8C0F49 100%);}
+  .proj .thumb .label{
+    position:absolute; top:10px; left:12px;
+    font-family:var(--f-body); font-weight:600; font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color: rgba(255,255,255,.85);
+  }
+  .proj .thumb .play{
+    position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
+    width:38px; height:38px; border-radius:999px; background: rgba(255,255,255,.92); display:flex; align-items:center; justify-content:center;
+  }
+  .proj .thumb .play::after{
+    content:""; width:0; height:0; border-left:10px solid var(--navy); border-top:7px solid transparent; border-bottom:7px solid transparent; margin-left:2px;
+  }
+  .proj .body{ padding: 14px 16px 16px; display:flex; flex-direction:column; gap:6px;}
+  .proj .cat{
+    font-family:var(--f-body); font-weight:600; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color: var(--ink-mute);
+  }
+  .proj h4{
+    font-family:var(--f-head); font-weight:600; font-size:15px; letter-spacing:-0.01em; color:#fff; margin:0; line-height:1.25;
+  }
+  .proj p{ font-family:var(--f-body); font-size:12.5px; color: var(--ink-soft); margin:0; line-height:1.45;}
+
+  /* —— CONTACT page —— */
+  .ctc-grid{
+    display:grid; grid-template-columns: 1fr 1.1fr; gap: 40px; padding: 56px;
+    align-items:start;
+  }
+  .ctc-left h1.display{ font-size: clamp(36px, 4.2vw, 52px); max-width: 14ch; margin: 10px 0 18px;}
+  .ctc-left .sub{ max-width: 42ch; font-size: 16px;}
+  .ctc-info{ margin-top: 32px; display:flex; flex-direction:column; gap: 14px;}
+  .ctc-row{ display:flex; gap:14px; align-items:center; padding:14px 16px; background: var(--navy-2); border:1px solid var(--line); border-radius: var(--radius-sm);}
+  .ctc-row .ico{
+    width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    background: rgba(0,152,255,.12); color: var(--blue); border:1px solid rgba(0,152,255,.3);
+    font-family:var(--f-head); font-weight:700;
+  }
+  .ctc-row.pink .ico{ background: rgba(231,33,117,.12); color: var(--pink); border-color: rgba(231,33,117,.3);}
+  .ctc-row .lbl{ font-family:var(--f-body); font-weight:600; font-size:11px; color: var(--ink-mute); letter-spacing:.16em; text-transform:uppercase;}
+  .ctc-row .val{ font-family:var(--f-head); font-weight:500; font-size:14px; color:#fff;}
+
+  /* form */
+  .form{
+    background: var(--navy-2); border:1px solid var(--line); border-radius: 18px;
+    padding: 28px; display:grid; grid-template-columns: 1fr 1fr; gap: 16px 18px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px;}
+  .field.full{ grid-column: 1 / -1;}
+  .field label{
+    font-family:var(--f-body); font-weight:600; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color: var(--ink-soft);
+    display:flex; gap:6px; align-items:center;
+  }
+  .field label .req{ color: var(--pink); }
+  .field input, .field textarea{
+    background: rgba(255,255,255,0.04); border:1px solid var(--line-strong); border-radius: 10px;
+    height:46px; color:#fff; font-family:var(--f-body); font-size:14px; padding: 0 14px; outline:none;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .field textarea{ height: 120px; padding: 12px 14px; resize: vertical;}
+  .field input:focus, .field textarea:focus{ border-color: var(--blue); background: rgba(0,152,255,.06);}
+  .field input::placeholder, .field textarea::placeholder{ color: var(--ink-mute);}
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:2px;}
+  .chip-toggle{
+    background: rgba(255,255,255,0.04); border:1px solid var(--line-strong); color: var(--ink-soft);
+    padding: 8px 14px; border-radius: 999px; font-family:var(--f-head); font-weight:500; font-size:12px;
+    cursor:pointer; transition: all .15s ease; user-select:none;
+  }
+  .chip-toggle:hover{ border-color: var(--blue);}
+  .chip-toggle.on{ background: var(--blue); color:#fff; border-color: var(--blue);}
+  .form-foot{ grid-column: 1 / -1; display:flex; justify-content:space-between; align-items:center; gap:14px; margin-top: 8px; flex-wrap:wrap;}
+  .form-foot .note{ font-family:var(--f-body); font-size:12px; color: var(--ink-mute);}
+
+  /* —— Responsive —— */
+  @media (max-width: 980px){
+    .hero{ grid-template-columns: 1fr; padding: 32px 24px;}
+    .hero .h-right{ min-height: 280px;}
+    .hero-strip{ grid-template-columns: 1fr 1fr; padding: 22px 24px; gap: 18px;}
+    .section{ padding: 40px 28px;}
+    .do-grid{ grid-template-columns: repeat(2, 1fr);}
+    .pf-grid{ grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px;}
+    .pf.s-2x2, .pf.s-2x1, .pf.s-3x1, .pf.s-1x2{ grid-column: span 2; grid-row: span 1;}
+    .svc-head{ grid-template-columns: 56px 1fr auto; gap:14px; padding: 18px 18px;}
+    .svc-head .num-big{ font-size: 38px;}
+    .svc-head .tags{ display:none;}
+    .svc-head h3{ font-size:18px;}
+    .svc-head .desc{ font-size:12.5px;}
+    .svc-body .inner-pad{ padding: 18px 18px 22px; }
+    .proj-grid{ grid-template-columns: 1fr;}
+    .cta-band{ margin: 28px;}
+    .svc-list{ padding: 0 28px;}
+    .svc-intro{ padding: 40px 28px 20px;}
+    .ctc-grid{ grid-template-columns: 1fr; padding: 40px 28px;}
+    .form{ grid-template-columns: 1fr; }
+  }
+
+  /* —— Language switcher —— */
+  .lang-switch {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    align-items: center;
+  }
+  .lang-btn {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .lang-btn:hover { color: #fff; }
+  .lang-btn.active {
+    background: var(--pink);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(231, 33, 117, 0.35);
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"></span>pagurai
+    <small>MID-FI · BRAND APPLIED</small>
+  </div>
+  <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+    <nav class="tabs" id="tabs" role="tablist">
+      <button class="tab active" data-page="home" role="tab"><span class="num">01</span>Home</button>
+      <button class="tab" data-page="services" role="tab"><span class="num">02</span>Services</button>
+      <button class="tab" data-page="contact" role="tab"><span class="num">03</span>Contact</button>
+    </nav>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="es">ES</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============== HOME ============== -->
+<main class="surface" id="page-home" data-screen-label="01 Home">
+  <div class="page-meta">
+    <span>PAGURAI · WEB / 01 — HOME · PORTFOLIO</span>
+    <span class="pill" data-i18n="meta-home">PÁGINA 01 / 03</span>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" data-screen-label="Hero">
+    <div class="h-left">
+      <span class="eyebrow" data-i18n="home-hero-label">[CORE_REEL_24]</span>
+      <h1 class="display" data-i18n="home-h">Contenido, automatización y <em>pauta con IA</em>.</h1>
+      <p class="sub" data-i18n="home-sub">Sistemas para producir contenido, correr campañas y generar ventas — a escala, con menos fricción.</p>
+      <div class="btn-row">
+        <a class="btn primary" data-i18n="cta-services">Ver trabajo <span class="arrow">→</span></a>
+        <a class="btn watch" data-i18n="cta-reel">Ver reel <span class="play-circle"></span></a>
+      </div>
+    </div>
+
+    <div class="h-right">
+      <span class="ph-label" data-i18n="hero-ph">HERO IMAGE / VIDEO</span>
+    </div>
+  </section>
+
+  <div class="hero-strip" data-screen-label="Hero strip">
+    <div class="col">
+      <span class="k" data-i18n="strip-1-k">STUDIO</span>
+      <span class="v" data-i18n="strip-1-v">PAGURAI CREATIVE</span>
+    </div>
+    <div class="col">
+      <span class="k" data-i18n="strip-2-k">FOCUS</span>
+      <span class="v" data-i18n="strip-2-v">AI VISUAL SYSTEMS</span>
+    </div>
+    <div class="col">
+      <span class="k" data-i18n="strip-3-k">BASE</span>
+      <span class="v" data-i18n="strip-3-v">MIAMI, FL</span>
+    </div>
+    <div class="col">
+      <span class="k" data-i18n="strip-4-k">AVAILABLE</span>
+      <span class="v" data-i18n="strip-4-v">WORLDWIDE</span>
+    </div>
+  </div>
+
+  <!-- WHAT WE DO -->
+  <section class="section" data-screen-label="What we do">
+    <div class="section-head">
+      <div class="lead">
+        <span class="eyebrow" data-i18n="home-do-label">QUÉ HACEMOS · 7 BLOQUES</span>
+        <h2 class="head" style="margin-top:10px;" data-i18n="home-do-h">Una caja de herramientas, no un menú de servicios.</h2>
+      </div>
+      <p class="aside" data-i18n="home-do-aside">Cada bloque vive solo, pero juntos forman un sistema de contenido + ventas.</p>
+    </div>
+
+    <div class="do-grid">
+      <div class="do-tile feat">
+        <div class="ico"><Svg name="ai"/></div>
+        <div>
+          <div class="num">01</div>
+          <div class="name" data-i18n="do-1">Creación de contenido con IA</div>
+        </div>
+      </div>
+      <div class="do-tile">
+        <div class="ico"><Svg name="video"/></div>
+        <div>
+          <div class="num">02</div>
+          <div class="name" data-i18n="do-2">Producción audiovisual</div>
+        </div>
+      </div>
+      <div class="do-tile">
+        <div class="ico"><Svg name="cog"/></div>
+        <div>
+          <div class="num">03</div>
+          <div class="name" data-i18n="do-3">Automatización de contenido</div>
+        </div>
+      </div>
+      <div class="do-tile">
+        <div class="ico"><Svg name="meta"/></div>
+        <div>
+          <div class="num">04</div>
+          <div class="name" data-i18n="do-4">Meta Ads</div>
+        </div>
+      </div>
+      <div class="do-tile">
+        <div class="ico"><Svg name="google"/></div>
+        <div>
+          <div class="num">05</div>
+          <div class="name" data-i18n="do-5">Google Ads</div>
+        </div>
+      </div>
+      <div class="do-tile">
+        <div class="ico"><Svg name="chart"/></div>
+        <div>
+          <div class="num">06</div>
+          <div class="name" data-i18n="do-6">Trafficker</div>
+        </div>
+      </div>
+      <div class="do-tile">
+        <div class="ico"><Svg name="layout"/></div>
+        <div>
+          <div class="num">07</div>
+          <div class="name" data-i18n="do-7">Landing pages</div>
+        </div>
+      </div>
+      <div class="do-tile callout">
+        <div class="name" data-i18n="do-more">Conectados como un solo sistema</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="section" data-screen-label="Portfolio">
+    <div class="section-head">
+      <div class="lead">
+        <span class="eyebrow" data-i18n="home-pf-label">PORTAFOLIO · TRABAJOS SELECCIONADOS</span>
+        <h2 class="head" style="margin-top:10px;" data-i18n="home-pf-h">Mixed media — placeholders por ahora.</h2>
+      </div>
+      <a class="btn ghost" data-i18n="pf-all">Ver todos <span class="arrow">→</span></a>
+    </div>
+
+    <div class="pf-grid">
+      <div class="pf s-2x2">
+        <div class="thumb ph cross"></div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-1">Skincare — Hero set</div>
+          <span class="pill-tag" data-i18n="pf-1-tag">Imagen IA</span>
+        </div>
+      </div>
+      <div class="pf s-2x1">
+        <div class="thumb ph blue"></div>
+        <div class="play"></div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-2">Marca de café — spot :30</div>
+          <span class="pill-tag" data-i18n="pf-2-tag">Video Ad</span>
+        </div>
+      </div>
+      <div class="pf s-2x1">
+        <div class="thumb ph"></div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-3">Tenis — carrusel estático</div>
+          <span class="pill-tag" data-i18n="pf-3-tag">Creatividad</span>
+        </div>
+      </div>
+      <div class="pf s-1x2">
+        <div class="thumb ph pink"></div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-4">Suplemento DTC — LP</div>
+          <span class="pill-tag" data-i18n="pf-4-tag">Landing</span>
+        </div>
+      </div>
+      <div class="pf s-3x1">
+        <div class="thumb" style="position:absolute; inset:0; background: linear-gradient(180deg, var(--navy-3), var(--navy)); display:flex; align-items:center; justify-content:center; padding:20px;">
+          <div style="display:flex; gap:6px; align-items:end; height:60%;">
+            <div style="width:14px; height:30%; background: var(--blue-2); border-radius:2px;"></div>
+            <div style="width:14px; height:55%; background: var(--blue-2); border-radius:2px;"></div>
+            <div style="width:14px; height:42%; background: var(--blue-2); border-radius:2px;"></div>
+            <div style="width:14px; height:72%; background: var(--blue); border-radius:2px;"></div>
+            <div style="width:14px; height:88%; background: var(--blue); border-radius:2px;"></div>
+            <div style="width:14px; height:60%; background: var(--blue); border-radius:2px;"></div>
+            <div style="width:14px; height:100%; background: var(--pink); border-radius:2px;"></div>
+          </div>
+        </div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-5">Workflow — 12 variaciones / hora</div>
+          <span class="pill-tag" data-i18n="pf-5-tag">Automatización</span>
+        </div>
+      </div>
+      <div class="pf s-2x1">
+        <div class="thumb ph cross"></div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-6">Apparel — pack lifestyle</div>
+          <span class="pill-tag" data-i18n="pf-6-tag">Imagen IA</span>
+        </div>
+      </div>
+      <div class="pf s-2x1">
+        <div class="thumb ph"></div>
+        <div class="play"></div>
+        <div class="meta">
+          <div class="t" data-i18n="pf-7">Hogar — Reels x6</div>
+          <span class="pill-tag" data-i18n="pf-7-tag">Video corto</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band" data-screen-label="Final CTA">
+    <div>
+      <h3 data-i18n="home-cta-h">Convierte tu contenido en un sistema de ventas escalable.</h3>
+      <div class="small" style="margin-top:8px;" data-i18n="home-cta-note">Diagnóstico gratis · 20 minutos · sin compromiso</div>
+    </div>
+    <div class="btn-row">
+      <a class="btn primary" data-i18n="cta-start">Empezar <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+  <div class="pg-foot">
+    <span>PAGURAI © 2026</span>
+    <span data-i18n="foot-home">HERO → QUÉ HACEMOS → PORTAFOLIO → CTA</span>
+  </div>
+</main>
+
+<!-- ============== SERVICES ============== -->
+<main class="surface" id="page-services" data-screen-label="02 Services" style="display:none;">
+  <div class="page-meta">
+    <span>PAGURAI · WEB / 02 — SERVICIOS</span>
+    <span class="pill">PÁGINA 02 / 03</span>
+  </div>
+
+  <section class="svc-intro" data-screen-label="Services intro">
+    <span class="eyebrow b" data-i18n="svc-label">SERVICIOS · 6 PILARES</span>
+    <h1 class="display" style="margin-top:14px;" data-i18n="svc-h">Seis bloques. <em style="color:var(--blue); font-style:normal;">Un sistema.</em></h1>
+    <p style="max-width: 58ch; font-size:16px; margin-top:16px;" data-i18n="svc-sub">Cada pilar funciona por sí solo — pero están pensados para conectarse en un motor de contenido + pauta para tu tienda.</p>
+
+    <div class="svc-jump">
+      <span class="chip"><span class="n">01</span><span data-i18n="svc-jump-1">Contenido</span></span>
+      <span class="chip"><span class="n">02</span><span data-i18n="svc-jump-2">Video</span></span>
+      <span class="chip"><span class="n">03</span><span data-i18n="svc-jump-3">Automatización</span></span>
+      <span class="chip"><span class="n">04</span><span data-i18n="svc-jump-4">Pauta</span></span>
+      <span class="chip"><span class="n">05</span><span data-i18n="svc-jump-5">Landing</span></span>
+      <span class="chip"><span class="n">06</span><span data-i18n="svc-jump-6">Estrategia</span></span>
+    </div>
+  </section>
+
+  <section class="svc-list" data-screen-label="Service list">
+
+    <article class="svc" data-open="true">
+      <button class="svc-head" type="button">
+        <div class="num-big">01</div>
+        <div>
+          <h3 data-i18n="s1-h">Creación de contenido con IA</h3>
+          <p class="desc" data-i18n="s1-d">Imágenes de producto, lifestyle y creatividades on-brand a escala — en días, no semanas.</p>
+        </div>
+        <div class="tags">
+          <span class="tag" data-i18n="s1-b1">Imágenes de producto</span>
+          <span class="tag" data-i18n="s1-b2">Lifestyle</span>
+          <span class="tag" data-i18n="s1-b3">Reels</span>
+          <span class="tag" data-i18n="s1-b4">Ad creatives</span>
+        </div>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="svc-body">
+        <div class="inner">
+          <div class="inner-pad">
+            <div class="body-head">
+              <span class="lbl" data-i18n="projects-lbl">Proyectos seleccionados</span>
+              <a class="more" data-i18n="projects-more">Ver todos →</a>
+            </div>
+            <div class="proj-grid">
+              <div class="proj">
+                <div class="thumb cross"><span class="label">IMG · 01</span></div>
+                <div class="body">
+                  <span class="cat">Skincare · DTC</span>
+                  <h4>Set hero — línea facial</h4>
+                  <p>24 imágenes on-brand para PDP y feed, generadas en 3 días.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb"><span class="label">IMG · 02</span></div>
+                <div class="body">
+                  <span class="cat">Apparel · streetwear</span>
+                  <h4>Pack lifestyle FW26</h4>
+                  <p>Lookbook de 18 piezas — modelos sintéticos, locaciones urbanas.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb pink"><span class="label">IMG · 03</span></div>
+                <div class="body">
+                  <span class="cat">Hogar · velas</span>
+                  <h4>Catálogo navideño</h4>
+                  <p>120 variaciones de imagen para campañas estacionales en Meta.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc alt">
+      <button class="svc-head" type="button">
+        <div class="num-big">02</div>
+        <div>
+          <h3 data-i18n="s2-h">Producción audiovisual</h3>
+          <p class="desc" data-i18n="s2-d">Video nativo eCom — spots de producto, ads y contenido social hechos para el feed y el funnel.</p>
+        </div>
+        <div class="tags">
+          <span class="tag" data-i18n="s2-b1">Producto</span>
+          <span class="tag" data-i18n="s2-b2">Spots</span>
+          <span class="tag" data-i18n="s2-b3">Ads</span>
+          <span class="tag" data-i18n="s2-b4">Social</span>
+        </div>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="svc-body">
+        <div class="inner">
+          <div class="inner-pad">
+            <div class="body-head">
+              <span class="lbl" data-i18n="projects-lbl">Proyectos seleccionados</span>
+              <a class="more" data-i18n="projects-more">Ver todos →</a>
+            </div>
+            <div class="proj-grid">
+              <div class="proj">
+                <div class="thumb blue"><div class="play"></div><span class="label">VIDEO · :30</span></div>
+                <div class="body">
+                  <span class="cat">Café · spot</span>
+                  <h4>"Mañanas reales" — :30s</h4>
+                  <p>Spot comercial para YouTube y Meta, con corte vertical para reels.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb cross"><div class="play"></div><span class="label">VIDEO · :15</span></div>
+                <div class="body">
+                  <span class="cat">Skincare · ad</span>
+                  <h4>Demo de producto vertical</h4>
+                  <p>6 cortes optimizados por hook para test creativo en Meta Ads.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb"><div class="play"></div><span class="label">REELS · x6</span></div>
+                <div class="body">
+                  <span class="cat">Hogar · social</span>
+                  <h4>Serie reels — unboxing</h4>
+                  <p>6 reels nativos para feed orgánico + amplificación pagada.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc">
+      <button class="svc-head" type="button">
+        <div class="num-big">03</div>
+        <div>
+          <h3 data-i18n="s3-h">Automatización de contenido</h3>
+          <p class="desc" data-i18n="s3-d">Flujos con IA que convierten un asset en cientos de variaciones — por canal, audiencia y campaña.</p>
+        </div>
+        <div class="tags">
+          <span class="tag" data-i18n="s3-b1">Flujos IA</span>
+          <span class="tag" data-i18n="s3-b2">Variaciones</span>
+          <span class="tag" data-i18n="s3-b3">Prompts</span>
+          <span class="tag" data-i18n="s3-b4">Escala</span>
+        </div>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="svc-body">
+        <div class="inner">
+          <div class="inner-pad">
+            <div class="body-head">
+              <span class="lbl" data-i18n="projects-lbl">Proyectos seleccionados</span>
+              <a class="more" data-i18n="projects-more">Ver todos →</a>
+            </div>
+            <div class="proj-grid">
+              <div class="proj">
+                <div class="thumb cross"><span class="label">WORKFLOW</span></div>
+                <div class="body">
+                  <span class="cat">Pipeline · ComfyUI</span>
+                  <h4>12 variaciones / hora</h4>
+                  <p>Flujo end-to-end de imagen base a 12 creatividades listas para pauta.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb"><span class="label">BATCH</span></div>
+                <div class="body">
+                  <span class="cat">DTC · suplementos</span>
+                  <h4>500 ads en 1 sprint</h4>
+                  <p>Generación masiva de variaciones por audiencia + propuesta de valor.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb blue"><span class="label">N8N · API</span></div>
+                <div class="body">
+                  <span class="cat">Integración</span>
+                  <h4>Auto-publicación a Meta</h4>
+                  <p>De prompt a campaña en borrador — sin intervención manual.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc alt">
+      <button class="svc-head" type="button">
+        <div class="num-big">04</div>
+        <div>
+          <h3 data-i18n="s4-h">Pauta digital</h3>
+          <p class="desc" data-i18n="s4-d">Setup liderado por trafficker para Meta y Google — alrededor de tu contenido, tu funnel y tus números.</p>
+        </div>
+        <div class="tags">
+          <span class="tag" data-i18n="s4-b1">Trafficker</span>
+          <span class="tag" data-i18n="s4-b2">Meta Ads</span>
+          <span class="tag" data-i18n="s4-b3">Google Ads</span>
+          <span class="tag" data-i18n="s4-b6">Reportes</span>
+        </div>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="svc-body">
+        <div class="inner">
+          <div class="inner-pad">
+            <div class="body-head">
+              <span class="lbl" data-i18n="projects-lbl">Proyectos seleccionados</span>
+              <a class="more" data-i18n="projects-more">Ver todos →</a>
+            </div>
+            <div class="proj-grid">
+              <div class="proj">
+                <div class="thumb"><span class="label">META · 90d</span></div>
+                <div class="body">
+                  <span class="cat">Skincare · DTC</span>
+                  <h4>ROAS 3.8× en 90 días</h4>
+                  <p>Reestructura de cuenta + creative testing semanal con automatización.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb pink"><span class="label">GOOGLE · PMAX</span></div>
+                <div class="body">
+                  <span class="cat">Apparel · global</span>
+                  <h4>Performance Max + Search</h4>
+                  <p>Setup multi-país con feeds segmentados y reportería semanal.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb cross"><span class="label">DASHBOARD</span></div>
+                <div class="body">
+                  <span class="cat">Reporting</span>
+                  <h4>Tablero unificado</h4>
+                  <p>Meta + Google + Shopify en un solo lugar, actualizado a diario.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc">
+      <button class="svc-head" type="button">
+        <div class="num-big">05</div>
+        <div>
+          <h3 data-i18n="s5-h">Landing pages</h3>
+          <p class="desc" data-i18n="s5-d">Páginas de alta conversión con copy, diseño y tracking — listas para conectarse con tus campañas.</p>
+        </div>
+        <div class="tags">
+          <span class="tag" data-i18n="s5-b1">Diseño</span>
+          <span class="tag" data-i18n="s5-b2">Copy</span>
+          <span class="tag" data-i18n="s5-b3">Forms</span>
+          <span class="tag" data-i18n="s5-b4">CRO</span>
+        </div>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="svc-body">
+        <div class="inner">
+          <div class="inner-pad">
+            <div class="body-head">
+              <span class="lbl" data-i18n="projects-lbl">Proyectos seleccionados</span>
+              <a class="more" data-i18n="projects-more">Ver todos →</a>
+            </div>
+            <div class="proj-grid">
+              <div class="proj">
+                <div class="thumb cross"><span class="label">LP · DTC</span></div>
+                <div class="body">
+                  <span class="cat">Suplemento · launch</span>
+                  <h4>Pre-venta — 6.2% CR</h4>
+                  <p>Landing de lanzamiento con copy comercial + tracking GA4 / Meta CAPI.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb blue"><span class="label">LP · LEAD</span></div>
+                <div class="body">
+                  <span class="cat">B2B · servicios</span>
+                  <h4>Captura de leads — agencia</h4>
+                  <p>Form multi-paso conectado a CRM y notificación a WhatsApp.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb"><span class="label">LP · QUIZ</span></div>
+                <div class="body">
+                  <span class="cat">Skincare · personalizado</span>
+                  <h4>Quiz + recomendador</h4>
+                  <p>Funnel interactivo con lógica condicional y email de resultados.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svc alt">
+      <button class="svc-head" type="button">
+        <div class="num-big">06</div>
+        <div>
+          <h3 data-i18n="s6-h">Estrategia digital</h3>
+          <p class="desc" data-i18n="s6-d">Hoja de ruta, ICP y valor percibido — la base estratégica que da dirección a contenido, pauta y producto.</p>
+        </div>
+        <div class="tags">
+          <span class="tag" data-i18n="s6-b1">Benchmarking</span>
+          <span class="tag" data-i18n="s6-b2">ICP</span>
+          <span class="tag" data-i18n="s6-b3">Valor percibido</span>
+          <span class="tag" data-i18n="s6-b4">User personas</span>
+        </div>
+        <span class="chev" aria-hidden="true"></span>
+      </button>
+      <div class="svc-body">
+        <div class="inner">
+          <div class="inner-pad">
+            <div class="body-head">
+              <span class="lbl" data-i18n="projects-lbl">Proyectos seleccionados</span>
+              <a class="more" data-i18n="projects-more">Ver todos →</a>
+            </div>
+            <div class="proj-grid">
+              <div class="proj">
+                <div class="thumb cross"><span class="label">BENCHMARK</span></div>
+                <div class="body">
+                  <span class="cat">Skincare · LATAM</span>
+                  <h4>Mapa competitivo — 12 marcas</h4>
+                  <p>Análisis de posicionamiento, precio, claims y creativos top de la competencia directa.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb pink"><span class="label">ICP</span></div>
+                <div class="body">
+                  <span class="cat">DTC · suplementos</span>
+                  <h4>3 user personas + ICP</h4>
+                  <p>Perfiles cuantitativos y cualitativos, jobs-to-be-done y disparadores de compra.</p>
+                </div>
+              </div>
+              <div class="proj">
+                <div class="thumb"><span class="label">VALOR PERCIBIDO</span></div>
+                <div class="body">
+                  <span class="cat">Café · especialidad</span>
+                  <h4>Matriz de valor por persona</h4>
+                  <p>Mensajes priorizados según lo que cada user persona valora — input directo para creativos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="cta-band" data-screen-label="Services CTA">
+    <div>
+      <h3 data-i18n="svc-cta-h">Quiero un sistema de contenido y ventas.</h3>
+      <div class="small" style="margin-top:8px;" data-i18n="svc-cta-note">Sin compromiso · diagnóstico gratis</div>
+    </div>
+    <a class="btn primary" data-i18n="svc-cta-btn">Solicitar diagnóstico <span class="arrow">→</span></a>
+  </section>
+
+  <div class="pg-foot">
+    <span>PAGURAI © 2026</span>
+    <span data-i18n="foot-svc">5 PILARES → CTA → CONTACTO</span>
+  </div>
+</main>
+
+<!-- ============== CONTACT ============== -->
+<main class="surface" id="page-contact" data-screen-label="03 Contact" style="display:none;">
+  <div class="page-meta">
+    <span>PAGURAI · WEB / 03 — CONTACTO</span>
+    <span class="pill">PÁGINA 03 / 03</span>
+  </div>
+
+  <section class="ctc-grid">
+    <div class="ctc-left">
+      <span class="eyebrow" data-i18n="ctc-label">CONTACTO · CAPTURA DE LEAD</span>
+      <h1 class="display" data-i18n="ctc-h">Cuéntanos qué vendes. <em style="color:var(--pink); font-style:normal;">Nosotros armamos el sistema.</em></h1>
+      <p class="sub" data-i18n="ctc-sub">Envíanos un brief corto y te devolvemos un diagnóstico gratis de 20 min: qué falta, qué automatizar y qué probar primero.</p>
+
+      <div class="ctc-info">
+        <div class="ctc-row">
+          <div class="ico">✉</div>
+          <div>
+            <div class="lbl">EMAIL</div>
+            <div class="val">hello@pagurai.com</div>
+          </div>
+        </div>
+        <div class="ctc-row pink">
+          <div class="ico">W</div>
+          <div>
+            <div class="lbl">WHATSAPP</div>
+            <div class="val">+57 ••• ••• ••••</div>
+          </div>
+        </div>
+        <div class="ctc-row">
+          <div class="ico" style="background: rgba(255,255,255,.06); color: var(--ink-soft); border-color: var(--line-strong);">⏱</div>
+          <div>
+            <div class="lbl" data-i18n="ctc-resp-label">RESPUESTA HABITUAL</div>
+            <div class="val" data-i18n="ctc-resp">en ~24h, días hábiles</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form" data-screen-label="Contact form">
+      <div class="field">
+        <label data-i18n="f-name">Nombre <span class="req">*</span></label>
+        <input type="text" placeholder="Tu nombre" />
+      </div>
+      <div class="field">
+        <label data-i18n="f-company">Empresa <span class="req">*</span></label>
+        <input type="text" placeholder="Nombre de tu marca" />
+      </div>
+      <div class="field">
+        <label data-i18n="f-wa">WhatsApp <span class="req">*</span></label>
+        <input type="tel" placeholder="+57 ••• ••• ••••" />
+      </div>
+      <div class="field">
+        <label data-i18n="f-web">Sitio web / Instagram</label>
+        <input type="text" placeholder="pagurai.com  ·  @marca" />
+      </div>
+      <div class="field full">
+        <label data-i18n="f-biz">Tipo de negocio</label>
+        <input type="text" placeholder="Skincare DTC, café especialidad, etc." />
+      </div>
+      <div class="field full">
+        <label><span data-i18n="f-svc">Servicio que necesitas</span> <span style="color:var(--ink-mute); text-transform:none; letter-spacing:0; font-weight:500;" data-i18n="f-svc-multi">(multi-selección)</span></label>
+        <div class="chips">
+          <span class="chip-toggle on"><span data-i18n="f-svc-1">Contenido con IA</span></span>
+          <span class="chip-toggle"><span data-i18n="f-svc-2">Video</span></span>
+          <span class="chip-toggle on"><span data-i18n="f-svc-3">Meta Ads</span></span>
+          <span class="chip-toggle"><span data-i18n="f-svc-4">Google Ads</span></span>
+          <span class="chip-toggle"><span data-i18n="f-svc-5">Landing page</span></span>
+          <span class="chip-toggle"><span data-i18n="f-svc-6">Sistema completo</span></span>
+        </div>
+      </div>
+      <div class="field full">
+        <label data-i18n="f-msg">Mensaje</label>
+        <textarea placeholder="Cuéntanos qué necesitas..."></textarea>
+      </div>
+      <div class="form-foot">
+        <span class="note" data-i18n="f-priv">Sin spam. Nunca.</span>
+        <a class="btn primary" data-i18n="f-cta">Solicitar diagnóstico <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="pg-foot">
+    <span>PAGURAI © 2026</span>
+    <span data-i18n="foot-ctc">FORM SUBMIT → GRACIAS → LINK CALENDARIO</span>
+  </div>
+</main>
+
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll('#tabs .tab');
+  const pages = { home: document.getElementById('page-home'), services: document.getElementById('page-services'), contact: document.getElementById('page-contact') };
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.toggle('active', x === t));
+    const p = t.dataset.page;
+    Object.entries(pages).forEach(([k, el]) => el.style.display = (k === p ? '' : 'none'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+
+  // chip toggle (form)
+  document.addEventListener('click', (e) => {
+    const c = e.target.closest('.chip-toggle');
+    if (c) c.classList.toggle('on');
+  });
+
+  // service accordion
+  document.addEventListener('click', (e) => {
+    const head = e.target.closest('.svc-head');
+    if (!head) return;
+    const article = head.closest('.svc');
+    if (!article) return;
+    const isOpen = article.getAttribute('data-open') === 'true';
+    // close all
+    document.querySelectorAll('.svc').forEach(a => a.setAttribute('data-open', 'false'));
+    // toggle this one
+    article.setAttribute('data-open', isOpen ? 'false' : 'true');
+  });
+
+  // I18N Dictionary
+  const I18N = {
+    en: {
+      "meta-home":"PAGE 01 / 03",
+      "home-hero-label":"[CORE_REEL_24]",
+      "home-h":"Content, automation &amp; <em>ads with AI</em>.",
+      "home-sub":"Systems to produce content, run campaigns and generate sales — at scale, with less friction.",
+      "cta-services":"View work <span class=\"arrow\">→</span>",
+      "cta-reel":"Watch reel <span class=\"play-circle\"></span>",
+      "cta-contact":"Contact",
+      "hero-ph":"HERO IMAGE / VIDEO",
+      "strip-1-k":"STUDIO","strip-1-v":"PAGURAI CREATIVE",
+      "strip-2-k":"FOCUS","strip-2-v":"AI VISUAL SYSTEMS",
+      "strip-3-k":"BASE","strip-3-v":"MIAMI, FL",
+      "strip-4-k":"AVAILABLE","strip-4-v":"WORLDWIDE",
+      "home-trust":"trusted by ecom brands",
+      "hero-video":"VIDEO · :15",
+      "hero-ctr":"CTR 4.2%",
+      "hero-roas":"ROAS · 90d",
+      "home-do-label":"WHAT WE DO · 7 BLOCKS",
+      "home-do-h":"A toolkit, not a service menu.",
+      "home-do-aside":"Each block stands alone — together they form one content + sales system.",
+      "do-1":"AI Content Creation","do-2":"Video Production","do-3":"Content Automation","do-4":"Meta Ads","do-5":"Google Ads","do-6":"Trafficker","do-7":"Landing Pages",
+      "do-more":"Connected as one system",
+      "home-pf-label":"PORTFOLIO · SELECTED WORK",
+      "home-pf-h":"Mixed media — placeholders for now.",
+      "pf-all":"View all <span class=\"arrow\">→</span>",
+      "pf-1":"Skincare — Hero set","pf-1-tag":"AI Image",
+      "pf-2":"Coffee brand — :30 spot","pf-2-tag":"Video Ad",
+      "pf-3":"Sneakers — Static carousel","pf-3-tag":"Ad Creative",
+      "pf-4":"DTC supplement LP","pf-4-tag":"Landing",
+      "pf-5":"Workflow — 12 variations / hr","pf-5-tag":"Automation",
+      "pf-6":"Apparel — Lifestyle pack","pf-6-tag":"AI Image",
+      "pf-7":"Home goods — Reels x6","pf-7-tag":"Short video",
+      "home-cta-h":"Turn your content into a scalable sales system.",
+      "cta-start":"Get started <span class=\"arrow\">→</span>",
+      "home-cta-note":"Free diagnosis · 20 minutes · no commitment",
+      "foot-home":"HERO → WHAT WE DO → PORTFOLIO → CTA",
+      "svc-label":"SERVICES · 6 PILLARS",
+      "svc-h":"Six blocks. <em style=\"color:var(--blue); font-style:normal;\">One system.</em>",
+      "svc-sub":"Each pillar works on its own — but they're designed to plug together into one content + ads engine for your store.",
+      "svc-jump-1":"Content","svc-jump-2":"Video","svc-jump-3":"Automation","svc-jump-4":"Paid media","svc-jump-5":"Landing","svc-jump-6":"Strategy",
+      "s1-h":"AI Content Creation","s1-d":"On-brand product imagery, lifestyle visuals and ad creatives generated at scale — in days, not weeks.",
+      "s1-b1":"Product images","s1-b2":"Lifestyle shots","s1-b3":"Short videos / reels","s1-b4":"Ad creatives (static + motion)",
+      "s2-h":"Video &amp; Creative Production","s2-d":"Native eCom video — product spots, ads and social content built for the feed and the funnel.",
+      "s2-b1":"Product videos","s2-b2":"Commercial spots","s2-b3":"Visual ads","s2-b4":"Social-first content",
+      "s3-h":"Content Automation","s3-d":"AI workflows that turn one asset into hundreds of variations — by channel, audience and campaign.",
+      "s3-b1":"AI workflows","s3-b2":"Variation generation","s3-b3":"Prompt automation","s3-b4":"Scalable production",
+      "s4-h":"Paid Media","s4-d":"A trafficker-led setup for Meta &amp; Google — built around your content, your funnel and your numbers.",
+      "s4-b1":"Trafficker","s4-b2":"Meta Ads","s4-b3":"Google Ads","s4-b4":"Campaign setup","s4-b5":"Optimization","s4-b6":"Reporting",
+      "s5-h":"Landing Pages","s5-d":"High-converting pages with copy, design and tracking — built to plug straight into your campaigns.",
+      "s5-b1":"Landing page design","s5-b2":"Commercial copywriting","s5-b3":"Form integration","s5-b4":"Conversion optimization","s5-b5":"Funnel connection",
+      "s6-h":"Digital strategy","s6-d":"Roadmap, ICP and perceived value — the strategic base that drives content, ads and product.",
+      "s6-b1":"Benchmarking","s6-b2":"ICP","s6-b3":"Perceived value","s6-b4":"User personas",
+      "svc-cta-h":"I want a content + ads system.",
+      "projects-lbl":"Selected projects",
+      "projects-more":"View all →",
+      "svc-cta-btn":"Request diagnosis <span class=\"arrow\">→</span>",
+      "svc-cta-note":"No commitment · free diagnosis",
+      "foot-svc":"5 PILLARS → CTA → CONTACT",
+      "ctc-label":"CONTACT · LEAD CAPTURE",
+      "ctc-h":"Tell us what you sell. <em style=\"color:var(--pink); font-style:normal;\">We build the system.</em>",
+      "ctc-sub":"Send us a quick brief and we'll come back with a free 20-min diagnosis: what's missing, what to automate, and what to test first.",
+      "ctc-resp-label":"USUAL REPLY","ctc-resp":"within ~24h, business days",
+      "f-name":"Name <span class=\"req\">*</span>","f-company":"Company <span class=\"req\">*</span>","f-wa":"WhatsApp <span class=\"req\">*</span>","f-web":"Website / Instagram",
+      "f-biz":"Type of business","f-svc":"Service needed","f-svc-multi":"(multi-select)",
+      "f-svc-1":"AI Content","f-svc-2":"Video","f-svc-3":"Meta Ads","f-svc-4":"Google Ads","f-svc-5":"Landing Page","f-svc-6":"Full System",
+      "f-msg":"Message","f-priv":"No spam. Ever.","f-cta":"Request diagnosis <span class=\"arrow\">→</span>",
+      "foot-ctc":"FORM SUBMIT → THANK-YOU → CALENDAR LINK"
+    },
+    es: {
+      "meta-home":"PÁGINA 01 / 03",
+      "home-hero-label":"[CORE_REEL_24]",
+      "home-h":"Contenido, automatización y <em>pauta con IA</em>.",
+      "home-sub":"Sistemas para producir contenido, correr campañas y generar ventas — a escala, con menos fricción.",
+      "cta-services":"Ver trabajo <span class=\"arrow\">→</span>",
+      "cta-reel":"Ver reel <span class=\"play-circle\"></span>",
+      "cta-contact":"Contactar",
+      "hero-ph":"HERO IMAGE / VIDEO",
+      "strip-1-k":"STUDIO","strip-1-v":"PAGURAI CREATIVE",
+      "strip-2-k":"FOCUS","strip-2-v":"AI VISUAL SYSTEMS",
+      "strip-3-k":"BASE","strip-3-v":"MIAMI, FL",
+      "strip-4-k":"AVAILABLE","strip-4-v":"WORLDWIDE",
+      "home-trust":"marcas ecom que confían",
+      "hero-video":"VIDEO · :15",
+      "hero-ctr":"CTR 4.2%",
+      "hero-roas":"ROAS · 90d",
+      "home-do-label":"QUÉ HACEMOS · 7 BLOQUES",
+      "home-do-h":"Una caja de herramientas, no un menú de servicios.",
+      "home-do-aside":"Cada bloque vive solo, pero juntos forman un sistema de contenido + ventas.",
+      "do-1":"Creación de contenido con IA","do-2":"Producción audiovisual","do-3":"Automatización de contenido","do-4":"Meta Ads","do-5":"Google Ads","do-6":"Trafficker","do-7":"Landing pages",
+      "do-more":"Conectados como un solo sistema",
+      "home-pf-label":"PORTAFOLIO · TRABAJOS SELECCIONADOS",
+      "home-pf-h":"Mixed media — placeholders por ahora.",
+      "pf-all":"Ver todos <span class=\"arrow\">→</span>",
+      "pf-1":"Skincare — Set hero","pf-1-tag":"Imagen IA",
+      "pf-2":"Marca de café — spot :30","pf-2-tag":"Video Ad",
+      "pf-3":"Tenis — carrusel estático","pf-3-tag":"Creatividad",
+      "pf-4":"Suplemento DTC — LP","pf-4-tag":"Landing",
+      "pf-5":"Workflow — 12 variaciones / h","pf-5-tag":"Automatización",
+      "pf-6":"Apparel — pack lifestyle","pf-6-tag":"Imagen IA",
+      "pf-7":"Hogar — Reels x6","pf-7-tag":"Video corto",
+      "home-cta-h":"Convierte tu contenido en un sistema de ventas escalable.",
+      "cta-start":"Empezar <span class=\"arrow\">→</span>",
+      "home-cta-note":"Diagnóstico gratis · 20 minutos · sin compromiso",
+      "foot-home":"HERO → QUÉ HACEMOS → PORTAFOLIO → CTA",
+      "svc-label":"SERVICIOS · 6 PILARES",
+      "svc-h":"Seis bloques. <em style=\"color:var(--blue); font-style:normal;\">Un sistema.</em>",
+      "svc-sub":"Cada pilar funciona por sí solo — pero están pensados para conectarse en un motor de contenido + pauta para tu tienda.",
+      "svc-jump-1":"Contenido","svc-jump-2":"Video","svc-jump-3":"Automatización","svc-jump-4":"Pauta","svc-jump-5":"Landing","svc-jump-6":"Estrategia",
+      "s1-h":"Creación de contenido con IA","s1-d":"Imágenes de producto, lifestyle y creatividades on-brand a escala — en días, no semanas.",
+      "s1-b1":"Imágenes de producto","s1-b2":"Lifestyle shots","s1-b3":"Videos cortos / reels","s1-b4":"Creatividades (estáticas + motion)",
+      "s2-h":"Producción audiovisual","s2-d":"Video nativo eCom — spots de producto, ads y contenido social hechos para el feed y el funnel.",
+      "s2-b1":"Videos de producto","s2-b2":"Spots comerciales","s2-b3":"Ads visuales","s2-b4":"Contenido para redes",
+      "s3-h":"Automatización de contenido","s3-d":"Flujos con IA que convierten un asset en cientos de variaciones — por canal, audiencia y campaña.",
+      "s3-b1":"Flujos con IA","s3-b2":"Generación de variaciones","s3-b3":"Automatización de prompts","s3-b4":"Producción a escala",
+      "s4-h":"Pauta digital","s4-d":"Setup liderado por trafficker para Meta y Google — alrededor de tu contenido, tu funnel y tus números.",
+      "s4-b1":"Trafficker","s4-b2":"Meta Ads","s4-b3":"Google Ads","s4-b4":"Configuración de campañas","s4-b5":"Optimización","s4-b6":"Reportes",
+      "s5-h":"Landing pages","s5-d":"Páginas de alta conversión con copy, diseño y tracking — listas para conectarse con tus campañas.",
+      "s5-b1":"Diseño de landing pages","s5-b2":"Copy comercial","s5-b3":"Integración de formularios","s5-b4":"Optimización de conversión","s5-b5":"Conexión con campañas",
+      "s6-h":"Estrategia digital","s6-d":"Hoja de ruta, ICP y valor percibido — la base estratégica que da dirección a contenido, pauta y producto.",
+      "s6-b1":"Benchmarking","s6-b2":"ICP","s6-b3":"Valor percibido","s6-b4":"User personas",
+      "svc-cta-h":"Quiero un sistema de contenido y ventas.",
+      "projects-lbl":"Proyectos seleccionados",
+      "projects-more":"Ver todos →",
+      "svc-cta-btn":"Solicitar diagnóstico <span class=\"arrow\">→</span>",
+      "svc-cta-note":"Sin compromiso · diagnóstico gratis",
+      "foot-svc":"5 PILARES → CTA → CONTACTO",
+      "ctc-label":"CONTACTO · CAPTURA DE LEAD",
+      "ctc-h":"Cuéntanos qué vendes. <em style=\"color:var(--pink); font-style:normal;\">Nosotros armamos el sistema.</em>",
+      "ctc-sub":"Envíanos un brief corto y te devolvemos un diagnóstico gratis de 20 min: qué falta, qué automatizar y qué probar primero.",
+      "ctc-resp-label":"RESPUESTA HABITUAL","ctc-resp":"en ~24h, días hábiles",
+      "f-name":"Nombre <span class=\"req\">*</span>","f-company":"Empresa <span class=\"req\">*</span>","f-wa":"WhatsApp <span class=\"req\">*</span>","f-web":"Sitio web / Instagram",
+      "f-biz":"Tipo de negocio","f-svc":"Servicio que necesitas","f-svc-multi":"(multi-selección)",
+      "f-svc-1":"Contenido con IA","f-svc-2":"Video","f-svc-3":"Meta Ads","f-svc-4":"Google Ads","f-svc-5":"Landing page","f-svc-6":"Sistema completo",
+      "f-msg":"Mensaje","f-priv":"Sin spam. Nunca.","f-cta":"Solicitar diagnóstico <span class=\"arrow\">→</span>",
+      "foot-ctc":"FORM SUBMIT → GRACIAS → LINK CALENDARIO"
+    }
+  };
+
+  // Language Switcher Logic
+  function applyLanguage(lang) {
+    const dict = I18N[lang] || I18N.es;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const k = el.getAttribute('data-i18n');
+      if (dict[k] != null) el.innerHTML = dict[k];
+    });
+    document.documentElement.lang = lang;
+  }
+
+  // Language switcher button handlers
+  const langBtns = document.querySelectorAll('.lang-btn');
+  langBtns.forEach(btn => btn.addEventListener('click', () => {
+    langBtns.forEach(b => b.classList.toggle('active', b === btn));
+    const lang = btn.dataset.lang;
+    applyLanguage(lang);
+  }));
+
+  // Initialize page on load
+  window.addEventListener('DOMContentLoaded', () => {
+    applyLanguage('es');
+  });
+</script>
+
+</body>
+</html>
