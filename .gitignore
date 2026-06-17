@@ -16,3 +16,16 @@ pnpm-debug.log*
 *.tsbuildinfo
 .DS_Store
 Thumbs.db
+desktop.ini
+
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+*~
+*.bak
+*.tmp
