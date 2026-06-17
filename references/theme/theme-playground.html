@@ -1,0 +1,1320 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagurai - Theme System Playground</title>
+  
+  <!-- Importar TipografÃ­as de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos de tema cargados (tambiÃ©n incrustados aquÃ­ para ejecuciÃ³n autÃ³noma) -->
+  <link rel="stylesheet" href="theme.css">
+  
+  <style>
+    /* Estilos especÃ­ficos del playground de documentaciÃ³n (No forman parte del core CSS del tema) */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      color: #f3f4f6;
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 120px;
+    }
+
+    .playground-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero header */
+    .pg-hero {
+      text-align: center;
+      padding: 80px 0 40px;
+      position: relative;
+    }
+
+    .pg-hero h1 {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 700;
+      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      margin: 15px 0;
+      background: linear-gradient(90deg, #ffffff 40%, var(--accent-color) 70%, var(--pink-neon) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(0, 152, 255, 0.15);
+    }
+
+    .pg-hero p {
+      font-size: 1.15rem;
+      color: rgba(243, 244, 246, 0.7);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Layout general */
+    .pg-grid-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 992px) {
+      .pg-grid-layout {
+        grid-template-columns: 1fr;
+      }
+      .pg-sidebar {
+        display: none;
+      }
+    }
+
+    /* Sidebar Navigation sticky */
+    .pg-sidebar {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .sidebar-card {
+      background: rgba(18, 18, 26, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-menu a {
+      color: rgba(243, 244, 246, 0.6);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 10px;
+      display: block;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .sidebar-menu a:hover {
+      color: #fff;
+      background: rgba(0, 152, 255, 0.08);
+      border-color: rgba(0, 152, 255, 0.15);
+    }
+
+    .sidebar-menu a.active {
+      color: #fff;
+      background: rgba(0, 152, 255, 0.15);
+      border-color: rgba(0, 152, 255, 0.3);
+      text-shadow: 0 0 8px rgba(0, 152, 255, 0.4);
+    }
+
+    /* Content Sections */
+    .pg-section {
+      background: rgba(18, 18, 26, 0.35);
+      border: 1px solid rgba(0, 152, 255, 0.08);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .pg-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pg-section h2::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(180deg, var(--accent-color), var(--pink-neon));
+      border-radius: 99px;
+    }
+
+    /* Color Swatches Grid */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .swatch-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .swatch-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent-color);
+      transform: translateY(-4px);
+    }
+
+    .swatch-color {
+      height: 80px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .swatch-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .swatch-info code {
+      font-size: 0.8rem;
+      color: rgba(243, 244, 246, 0.5);
+      background: rgba(0, 0, 0, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Typography Showcase */
+    .typo-spec {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .typo-row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    .typo-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .typo-label {
+      font-size: 0.85rem;
+      color: var(--pink-neon);
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .typo-sample-display {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-style: italic;
+      text-transform: uppercase;
+    }
+
+    .typo-sample-body {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      color: rgba(243, 244, 246, 0.9);
+    }
+
+    .typo-sample-sans {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: rgba(243, 244, 246, 0.7);
+    }
+
+    /* Buttons Showcase */
+    .button-showcase {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .btn-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .btn-container span {
+      font-size: 11px;
+      color: rgba(243, 244, 246, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Cards Grid */
+    .pg-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    /* Code Inspector Components */
+    .code-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+
+    .code-tab-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(243, 244, 246, 0.6);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .code-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+    }
+
+    .code-tab-btn.active {
+      background: rgba(0, 152, 255, 0.12);
+      border-color: var(--accent-color);
+      color: #fff;
+      text-shadow: 0 0 6px rgba(0, 152, 255, 0.4);
+    }
+
+    .code-block-container {
+      position: relative;
+      background: #020205;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.8rem;
+      color: rgba(243, 244, 246, 0.4);
+    }
+
+    .copy-btn {
+      background: rgba(0, 152, 255, 0.1);
+      border: 1px solid rgba(0, 152, 255, 0.3);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 10px rgba(0, 152, 255, 0.4);
+    }
+
+    .code-block-container pre {
+      padding: 16px;
+      margin: 0;
+      overflow-x: auto;
+      font-family: monospace, Courier, monospace;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+      max-height: 400px;
+    }
+
+    /* Toast Notification */
+    .toast-notification {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(16, 185, 129, 0.95);
+      border: 1px solid rgba(52, 211, 153, 0.5);
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      z-index: 10000;
+      font-weight: 600;
+      font-size: 0.9rem;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast-notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* CONTROL PANEL FLOATING (Bottom-right panel) */
+    .control-panel {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      width: 320px;
+      border-radius: 20px;
+      padding: 20px;
+      background: rgba(2, 6, 20, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .control-panel h3 {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      color: var(--pink-neon);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 6px;
+    }
+
+    .control-group {
+      margin-bottom: 14px;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: rgba(243, 244, 246, 0.5);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .color-presets {
+      display: flex;
+      gap: 8px;
+    }
+
+    .color-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .color-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .color-btn.active {
+      border-color: #fff;
+    }
+
+    .option-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .option-checkbox input {
+      cursor: pointer;
+    }
+
+    /* Navbar showcase wrap */
+    .navbar-preview-wrap {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px dashed rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+      min-height: 120px;
+    }
+
+    .logo-container img {
+      height: 24px;
+      width: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+     Capas de Fondo Fijas (Core Theme Background Layers)
+     ========================================================================== -->
+  <!-- Capa 1: Fondo SÃ³lido -->
+  <div class="bg-cover"></div>
+
+  <!-- Capa 2: Brillos Radiales (Glows) -->
+  <div class="bg-glows"></div>
+
+  <!-- Capa 3: CuadrÃ­cula GuÃ­a (Grid) -->
+  <div class="bg-grid"></div>
+
+  <!-- Capa 4: Matriz de Puntos (Canvas Matrix) -->
+  <div class="vw-dot-bg">
+    <canvas id="matrix-canvas"></canvas>
+    <div class="vw-dot-fade"></div>
+  </div>
+
+  <!-- ==========================================================================
+     Playground Content Wrapper
+     ========================================================================== -->
+  <div class="playground-wrapper">
+
+    <!-- HERO HEADER -->
+    <header class="pg-hero">
+      <span class="section-badge">PLAYGROUND DE DISEÃ‘O</span>
+      <h1>PAGURA THEME SYSTEM</h1>
+      <p>Showcase interactivo de colores, tipografÃ­as, botones, cards y navbars. Utiliza el inspector de cÃ³digo inferior para copiar los componentes directamente a tu aplicaciÃ³n.</p>
+    </header>
+
+    <!-- GRID LAYOUT -->
+    <div class="pg-grid-layout">
+
+      <!-- STICKY SIDEBAR -->
+      <aside class="pg-sidebar">
+        <div class="sidebar-card">
+          <ul class="sidebar-menu">
+            <li><a href="#colors" class="sidebar-link active">Colores y Fuentes</a></li>
+            <li><a href="#navbars" class="sidebar-link">Navegadores (Navbars)</a></li>
+            <li><a href="#buttons" class="sidebar-link">Botones Principales</a></li>
+            <li><a href="#cards" class="sidebar-link">Tarjetas (Glow Cards)</a></li>
+            <li><a href="#inspector" class="sidebar-link">Inspector de CÃ³digo</a></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- CONTENT SECTIONS -->
+      <main class="pg-content">
+
+        <!-- SECCIÃ“N 1: COLORES Y FUENTES -->
+        <section id="colors" class="pg-section">
+          <h2>Colores y Fuentes</h2>
+          <p style="margin-bottom: 24px; color: rgba(243, 244, 246, 0.7);">Haz clic en cualquier paleta para copiar su valor hexadecimal directamente al portapapeles.</p>
+          
+          <div class="swatch-grid" style="margin-bottom: 40px;">
+            <div class="swatch-card" onclick="copyHex('#0a0a0f')">
+              <div class="swatch-color" style="background-color: #0a0a0f; border: 1px solid rgba(255,255,255,0.08);"></div>
+              <div class="swatch-info">
+                <h4>Dark Base</h4>
+                <code>#0a0a0f</code>
+              </div>
+            </div>
+
+            <div class="swatch-card" onclick="copyHex('#0098FF')">
+              <div class="swatch-color" style="background-color: #0098FF; box-shadow: 0 0 15px rgba(0, 152, 255, 0.3);"></div>
+              <div class="swatch-info">
+                <h4>Electric Blue</h4>
+                <code>#0098FF</code>
+              </div>
+            </div>
+
+            <div class="swatch-card" onclick="copyHex('#E72175')">
+              <div class="swatch-color" style="background-color: #E72175; box-shadow: 0 0 15px rgba(231, 33, 117, 0.3);"></div>
+              <div class="swatch-info">
+                <h4>Neon Pink</h4>
+                <code>#E72175</code>
+              </div>
+            </div>
+
+            <div class="swatch-card" onclick="copyHex('rgba(18,18,26,0.65)')">
+              <div class="swatch-color" style="background-color: rgba(18,18,26,0.65); border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(10px);"></div>
+              <div class="swatch-info">
+                <h4>Glass Card</h4>
+                <code>rgba(18, 18, 26, 0.65)</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="typo-spec">
+            <div class="typo-row">
+              <div class="typo-label">Display Font</div>
+              <div class="typo-sample-display">OSWALD UPPER BOLD ITALIC</div>
+            </div>
+            <div class="typo-row">
+              <div class="typo-label">Body Font</div>
+              <div class="typo-sample-body">Outfit Sans - The quick brown fox jumps over the lazy dog.</div>
+            </div>
+            <div class="typo-row">
+              <div class="typo-label">Alternate Sans</div>
+              <div class="typo-sample-sans">Inter UI Font - Designed for clear readability and details.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÃ“N 2: NAVBARS -->
+        <section id="navbars" class="pg-section">
+          <h2>Navegadores (Navbars)</h2>
+          <p style="margin-bottom: 24px; color: rgba(243, 244, 246, 0.7);">Los diferentes estilos de barra de navegaciÃ³n del branding oficial de Pagurai.</p>
+
+          <!-- NAV 1 -->
+          <h4 style="font-family: var(--font-display); font-style: italic; text-transform: uppercase; margin-bottom: 12px; color: #fff;">01. VersiÃ³n Capsule (Flotante Minimalista)</h4>
+          <div class="navbar-preview-wrap">
+            <div style="width: 100%; max-width: 800px;">
+              <nav class="navbar-v1 liquid-glass-base">
+                <div class="logo-container">
+                  <img src="../brand/logo-pagurai-dark.svg" alt="Logo Pagurai" onerror="this.src='https://raw.githubusercontent.com/antigravity-ai/branding/main/logo-placeholder.svg';">
+                </div>
+                <ul class="nav-links-v1">
+                  <li><a href="#" class="active">Inicio</a></li>
+                  <li><a href="#">Servicios</a></li>
+                  <li><a href="#">Precios</a></li>
+                </ul>
+                <div>
+                  <button type="button" class="btn-liquid-action" style="padding: 8px 18px; font-size: 0.8rem;">Contacto</button>
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          <!-- NAV 2 -->
+          <h4 style="font-family: var(--font-display); font-style: italic; text-transform: uppercase; margin-bottom: 12px; color: #fff;">02. VersiÃ³n Aurora Wave (Anclado con brillo interno)</h4>
+          <div class="navbar-preview-wrap">
+            <div style="width: 100%;">
+              <nav class="navbar-v2 liquid-glass-base">
+                <div class="logo-container">
+                  <img src="../brand/logo-pagurai-dark.svg" alt="Logo Pagurai" onerror="this.src='https://raw.githubusercontent.com/antigravity-ai/branding/main/logo-placeholder.svg';">
+                </div>
+                <ul class="nav-links-v2">
+                  <li><a href="#">Modelos</a></li>
+                  <li><a href="#">Soluciones</a></li>
+                  <li><a href="#">Nosotros</a></li>
+                </ul>
+                <div>
+                  <button type="button" class="btn-liquid-outline" style="padding: 8px 18px; font-size: 0.8rem;">Empezar</button>
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          <!-- NAV 3 -->
+          <h4 style="font-family: var(--font-display); font-style: italic; text-transform: uppercase; margin-bottom: 12px; color: #fff;">03. VersiÃ³n Dock Gelatina (Segmentado)</h4>
+          <div class="navbar-preview-wrap">
+            <div class="navbar-v3-dock">
+              <div class="dock-segment liquid-glass-base dock-logo">
+                <img src="../brand/logo-pagurai-dark.svg" alt="Logo Pagurai" onerror="this.src='https://raw.githubusercontent.com/antigravity-ai/branding/main/logo-placeholder.svg';">
+              </div>
+              <div class="dock-segment liquid-glass-base">
+                <ul class="dock-links">
+                  <li><a href="#">Inicio</a></li>
+                  <li><a href="#">Precios</a></li>
+                </ul>
+              </div>
+              <div class="dock-segment liquid-glass-base dock-cta">
+                <button type="button" class="btn-dock-cta" style="padding: 6px 14px; font-size: 0.75rem;">Reservar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- NAV 4 -->
+          <h4 style="font-family: var(--font-display); font-style: italic; text-transform: uppercase; margin-bottom: 12px; color: #fff;">04. VersiÃ³n Cristal Cyber-Glass (Borde interactivo al cursor)</h4>
+          <div class="navbar-preview-wrap">
+            <div style="width: 100%;" id="cyber-navbar-wrap">
+              <nav class="navbar-v4 liquid-glass-base" id="cyber-navbar">
+                <div class="logo-container">
+                  <img src="../brand/logo-pagurai-dark.svg" alt="Logo Pagurai" onerror="this.src='https://raw.githubusercontent.com/antigravity-ai/branding/main/logo-placeholder.svg';">
+                </div>
+                <ul class="nav-links-v4">
+                  <li><a href="#">Canvas</a></li>
+                  <li><a href="#">API Docs</a></li>
+                  <li><a href="#">Comunidad</a></li>
+                </ul>
+                <div>
+                  <button type="button" class="btn-liquid-action" style="padding: 8px 18px; font-size: 0.8rem;">Unirse</button>
+                </div>
+              </nav>
+            </div>
+          <!-- NAV 5 -->
+          <h4 style="font-family: var(--font-display); font-style: italic; text-transform: uppercase; margin-bottom: 12px; color: #fff;">05. VersiÃ³n Cyber-Capsule (Capsule con borde interactivo al cursor)</h4>
+          <div class="navbar-preview-wrap">
+            <div style="width: 100%; max-width: 800px;">
+              <nav class="navbar-v5 liquid-glass-base" id="cyber-capsule-navbar">
+                <div class="logo-container">
+                  <img src="../brand/logo-pagurai-dark.svg" alt="Logo Pagurai" onerror="this.src='https://raw.githubusercontent.com/antigravity-ai/branding/main/logo-placeholder.svg';">
+                </div>
+                <ul class="nav-links-v1">
+                  <li><a href="#" class="active">Inicio</a></li>
+                  <li><a href="#">Servicios</a></li>
+                  <li><a href="#">Precios</a></li>
+                </ul>
+                <div>
+                  <button type="button" class="btn-liquid-action" style="padding: 8px 18px; font-size: 0.8rem;">Contacto</button>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÃ“N 3: BOTONES -->
+        <section id="buttons" class="pg-section">
+          <h2>Botones Principales y Secundarios</h2>
+          <p style="margin-bottom: 24px; color: rgba(243, 244, 246, 0.7);">Los tres botones clave del sistema con efectos tÃ¡ctiles e iluminaciÃ³n interactiva.</p>
+
+          <div class="button-showcase">
+            <div class="btn-container">
+              <span>A. Principal / CTA (Blue Glow)</span>
+              <button type="button" class="vw-cta-btn">PROBAR BOTÃ“N</button>
+            </div>
+
+            <div class="btn-container">
+              <span>B. Complementario (Neon Pink Breath)</span>
+              <button type="button" class="btn-liquid-action">CONTACTAR AHORA</button>
+            </div>
+
+            <div class="btn-container">
+              <span>C. Secundario (Outlined Glass)</span>
+              <button type="button" class="btn-liquid-outline">VER PLANES</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÃ“N 4: CARDS -->
+        <section id="cards" class="pg-section">
+          <h2>Tarjetas (Glow Cards)</h2>
+          <p style="margin-bottom: 24px; color: rgba(243, 244, 246, 0.7);">Coloca el cursor sobre las tarjetas para experimentar el destello radial interno y la iluminaciÃ³n reactiva de los bordes.</p>
+
+          <div class="pg-card-grid">
+            
+            <!-- Card 1 -->
+            <article class="vw-glow-card">
+              <div style="font-size: 28px; margin-bottom: 16px;">âš¡</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; font-style: italic; text-transform: uppercase; margin-bottom: 8px; color: #fff;">Video AI Synthesis</h3>
+              <p style="color: rgba(243, 244, 246, 0.7); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1;">
+                ProducciÃ³n automatizada de video de alta calidad mediante Kling y Luma, optimizada para campaÃ±as de conversiÃ³n en redes sociales.
+              </p>
+              <button type="button" class="vw-cta-btn">Explorar Modelo</button>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="vw-glow-card">
+              <div style="font-size: 28px; margin-bottom: 16px;">ðŸ§¬</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; font-style: italic; text-transform: uppercase; margin-bottom: 8px; color: #fff;">Glassmorphic Card</h3>
+              <p style="color: rgba(243, 244, 246, 0.7); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1;">
+                Efecto de desenfoque difuso saturado con reflejo especular en el borde del contenedor basado en la coordenada X/Y del ratÃ³n.
+              </p>
+              <button type="button" class="btn-liquid-action">Detalles</button>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="vw-glow-card">
+              <div style="font-size: 28px; margin-bottom: 16px;">ðŸš€</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; font-style: italic; text-transform: uppercase; margin-bottom: 8px; color: #fff;">Performance Scale</h3>
+              <p style="color: rgba(243, 244, 246, 0.7); font-size: 0.95rem; margin-bottom: 20px; flex-grow: 1;">
+                Escala de anuncios impulsada por diffusion models y anÃ¡lisis de datos en tiempo real para optimizar el retorno de inversiÃ³n publicitaria.
+              </p>
+              <button type="button" class="btn-liquid-outline">Ver MÃ©tricas</button>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- SECCIÃ“N 5: INSPECTOR DE CÃ“DIGO -->
+        <section id="inspector" class="pg-section">
+          <h2>Inspector de CÃ³digo</h2>
+          <p style="margin-bottom: 24px; color: rgba(243, 244, 246, 0.7);">Copia los bloques de cÃ³digo HTML y CSS necesarios para implementar cada elemento en tus propios layouts.</p>
+
+          <div class="code-tabs">
+            <button class="code-tab-btn active" onclick="switchTab('primary-btn')">BotÃ³n Principal</button>
+            <button class="code-tab-btn" onclick="switchTab('secondary-btn')">BotÃ³n Secundario</button>
+            <button class="code-tab-btn" onclick="switchTab('action-btn')">BotÃ³n Complementario</button>
+            <button class="code-tab-btn" onclick="switchTab('glow-card')">Glow Card</button>
+            <button class="code-tab-btn" onclick="switchTab('matrix-bg')">Dot Matrix Background</button>
+            <button class="code-tab-btn" onclick="switchTab('cyber-capsule')">Navbar Cyber-Capsule</button>
+          </div>
+
+          <!-- TAB CONTENT: PRIMARY BUTTON -->
+          <div id="tab-primary-btn" class="tab-content">
+            <div class="code-block-container" style="margin-bottom: 16px;">
+              <div class="code-block-header">
+                <span>Estructura HTML</span>
+                <button class="copy-btn" onclick="copySnippet('html-primary-btn')">Copiar HTML</button>
+              </div>
+              <pre><code id="html-primary-btn">&lt;button type="button" class="vw-cta-btn"&gt;
+  PROBAR BOTÃ“N
+&lt;/button&gt;</code></pre>
+            </div>
+            
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span>Estilo CSS</span>
+                <button class="copy-btn" onclick="copySnippet('css-primary-btn')">Copiar CSS</button>
+              </div>
+              <pre><code id="css-primary-btn">.vw-cta-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  color: #ffffff;
+  background: #0055FF;
+  border: 1.5px solid rgba(0, 210, 255, 0.8);
+  padding: 12px 28px;
+  border-radius: 999px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  transition: all .3s cubic-bezier(.16, 1, .3, 1);
+  animation: neon-breath 3s ease-in-out infinite;
+}
+
+.vw-cta-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: #188bf6;
+  border-color: #ffffff;
+  box-shadow: 
+    0 0 20px rgba(0, 85, 255, 0.6),
+    inset 0 0 10px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 5px #fff;
+}
+
+.vw-cta-btn .vw-btn-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(80px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.4) 0%, rgba(0, 85, 255, 0.6) 50%, transparent 80%);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.vw-cta-btn:hover .vw-btn-glow {
+  opacity: 1;
+}
+
+@keyframes neon-breath {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 85, 255, 0.4); }
+  50% { box-shadow: 0 0 22px rgba(0, 85, 255, 0.75), 0 0 35px rgba(0, 85, 255, 0.3); }
+}</code></pre>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: SECONDARY BUTTON -->
+          <div id="tab-secondary-btn" class="tab-content" style="display: none;">
+            <div class="code-block-container" style="margin-bottom: 16px;">
+              <div class="code-block-header">
+                <span>Estructura HTML</span>
+                <button class="copy-btn" onclick="copySnippet('html-secondary-btn')">Copiar HTML</button>
+              </div>
+              <pre><code id="html-secondary-btn">&lt;button type="button" class="btn-liquid-outline"&gt;
+  VER PLANES
+&lt;/button&gt;</code></pre>
+            </div>
+            
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span>Estilo CSS</span>
+                <button class="copy-btn" onclick="copySnippet('css-secondary-btn')">Copiar CSS</button>
+              </div>
+              <pre><code id="css-secondary-btn">.btn-liquid-outline {
+  background: rgba(255, 255, 255, 0.015);
+  color: #f3f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Oswald', sans-serif;
+  font-style: italic;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-liquid-outline:hover {
+  background: rgba(231, 33, 117, 0.1);
+  border-color: #E72175;
+  box-shadow: 
+    0 0 20px rgba(231, 33, 117, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}</code></pre>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: ACTION BUTTON -->
+          <div id="tab-action-btn" class="tab-content" style="display: none;">
+            <div class="code-block-container" style="margin-bottom: 16px;">
+              <div class="code-block-header">
+                <span>Estructura HTML</span>
+                <button class="copy-btn" onclick="copySnippet('html-action-btn')">Copiar HTML</button>
+              </div>
+              <pre><code id="html-action-btn">&lt;button type="button" class="btn-liquid-action"&gt;
+  CONTACTAR AHORA
+&lt;/button&gt;</code></pre>
+            </div>
+            
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span>Estilo CSS</span>
+                <button class="copy-btn" onclick="copySnippet('css-action-btn')">Copiar CSS</button>
+              </div>
+              <pre><code id="css-action-btn">.btn-liquid-action {
+  background: linear-gradient(135deg, #E72175, #a0104a);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(231, 33, 117, 0.35);
+  transition: all 0.35s cubic-bezier(.16, 1, .3, 1);
+  position: relative;
+  overflow: hidden;
+  animation: neon-pink-breath 3.5s ease-in-out infinite;
+}
+
+.btn-liquid-action::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 60%);
+  transform: scale(0);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+
+.btn-liquid-action:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 
+    0 8px 25px rgba(231, 33, 117, 0.6),
+    0 0 12px rgba(231, 33, 117, 0.4);
+}
+
+.btn-liquid-action:hover::before {
+  transform: scale(1);
+}
+
+@keyframes neon-pink-breath {
+  0%, 100% { box-shadow: 0 0 12px rgba(231, 33, 117, 0.3); }
+  50% { box-shadow: 0 0 24px rgba(231, 33, 117, 0.7), 0 0 35px rgba(231, 33, 117, 0.25); }
+}</code></pre>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: GLOW CARD -->
+          <div id="tab-glow-card" class="tab-content" style="display: none;">
+            <div class="code-block-container" style="margin-bottom: 16px;">
+              <div class="code-block-header">
+                <span>Estructura HTML</span>
+                <button class="copy-btn" onclick="copySnippet('html-glow-card')">Copiar HTML</button>
+              </div>
+              <pre><code id="html-glow-card">&lt;article class="vw-glow-card"&gt;
+  &lt;div class="card-icon"&gt;âš¡&lt;/div&gt;
+  &lt;h3 class="card-title"&gt;Video AI Synthesis&lt;/h3&gt;
+  &lt;p class="card-text"&gt;
+    ProducciÃ³n automatizada de video de alta calidad mediante Kling y Luma.
+  &lt;/p&gt;
+  &lt;button type="button" class="vw-cta-btn"&gt;Explorar Modelo&lt;/button&gt;
+&lt;/article&gt;</code></pre>
+            </div>
+            
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span>Estilo CSS</span>
+                <button class="copy-btn" onclick="copySnippet('css-glow-card')">Copiar CSS</button>
+              </div>
+              <pre><code id="css-glow-card">.vw-glow-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(18, 18, 26, 0.65);
+  border: 1px solid rgba(0, 152, 255, 0.15);
+  padding: 36px 30px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  --glow-x: 50%;
+  --glow-y: 50%;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1), border-color .35s cubic-bezier(.16, 1, .3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.vw-glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(350px circle at var(--glow-x) var(--glow-y), rgba(0, 152, 255, 0.14), rgba(99, 102, 241, 0.05) 45%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vw-glow-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(280px circle at var(--glow-x) var(--glow-y), rgba(0, 152, 255, 0.45), rgba(231, 33, 117, 0.25) 50%, transparent 75%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vw-glow-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(0, 152, 255, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 152, 255, 0.12);
+}
+
+.vw-glow-card:hover::before,
+.vw-glow-card:hover::after {
+  opacity: 1;
+}
+
+.vw-glow-card > * {
+  position: relative;
+  z-index: 2;
+}</code></pre>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: MATRIX BG -->
+          <div id="tab-matrix-bg" class="tab-content" style="display: none;">
+            <div class="code-block-container" style="margin-bottom: 16px;">
+              <div class="code-block-header">
+                <span>Estructura HTML</span>
+                <button class="copy-btn" onclick="copySnippet('html-matrix-bg')">Copiar HTML</button>
+              </div>
+              <pre><code id="html-matrix-bg">&lt;!-- Capa Matriz de Puntos --&gt;
+&lt;div class="vw-dot-bg"&gt;
+  &lt;canvas id="matrix-canvas"&gt;&lt;/canvas&gt;
+  &lt;div class="vw-dot-fade"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+            
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span>InicializaciÃ³n JS</span>
+                <button class="copy-btn" onclick="copySnippet('js-matrix-bg')">Copiar JavaScript</button>
+              </div>
+              <pre><code id="js-matrix-bg">// InicializaciÃ³n de matriz de puntos (usando theme.js)
+var canvas = document.getElementById('matrix-canvas');
+if (canvas) {
+  PaguraTheme.createDotMatrix(canvas, document.body, true);
+}</code></pre>
+            </div>
+          </div>
+
+          <!-- TAB CONTENT: CYBER CAPSULE -->
+          <div id="tab-cyber-capsule" class="tab-content" style="display: none;">
+            <div class="code-block-container" style="margin-bottom: 16px;">
+              <div class="code-block-header">
+                <span>Estructura HTML</span>
+                <button class="copy-btn" onclick="copySnippet('html-cyber-capsule')">Copiar HTML</button>
+              </div>
+              <pre><code id="html-cyber-capsule">&lt;nav class="navbar-v5 liquid-glass-base" id="cyber-capsule-navbar"&gt;
+  &lt;div class="logo-container"&gt;
+    &lt;img src="../brand/logo-pagurai-dark.svg" alt="Logo Pagurai"&gt;
+  &lt;/div&gt;
+  &lt;ul class="nav-links-v1"&gt;
+    &lt;li&gt;&lt;a href="#" class="active"&gt;Inicio&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Servicios&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Precios&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div&gt;
+    &lt;button type="button" class="btn-liquid-action" style="padding: 8px 18px; font-size: 0.8rem;"&gt;Contacto&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+            </div>
+            
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span>Estilo CSS</span>
+                <button class="copy-btn" onclick="copySnippet('css-cyber-capsule')">Copiar CSS</button>
+              </div>
+              <pre><code id="css-cyber-capsule">.navbar-v5 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 8px 24px;
+  border-radius: 999px; /* Formato Capsule Redondeado */
+  position: relative;
+  overflow: hidden;
+  --px: 50%;
+  --py: 50%;
+  transition: border-color 0.4s ease;
+  background: rgba(0, 0, 27, 0.3) !important;
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+.navbar-v5::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: radial-gradient(180px circle at var(--px) var(--py), var(--pink-neon) 0%, rgba(0, 152, 255, 0.5) 45%, transparent 75%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.navbar-v5:hover::after {
+  opacity: 1;
+  background: radial-gradient(220px circle at var(--px) var(--py), var(--pink-neon) 0%, var(--accent-color) 40%, transparent 70%);
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- ==========================================================================
+     Control Panel (Floating Config Console)
+     ========================================================================== -->
+  <div class="control-panel">
+    <h3>ConfiguraciÃ³n</h3>
+    
+    <div class="control-group">
+      <label>Fondo Base del Playground</label>
+      <div class="color-presets">
+        <button type="button" class="color-btn active" style="background-color: #0a0a0f;" data-color="#0a0a0f" title="#0a0a0f Base"></button>
+        <button type="button" class="color-btn" style="background-color: #000207;" data-color="#000207" title="#000207 Aurora"></button>
+        <button type="button" class="color-btn" style="background-color: #000510;" data-color="#000510" title="#000510 Deep"></button>
+        <button type="button" class="color-btn" style="background-color: #07070a;" data-color="#07070a" title="#07070a Jet Black"></button>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="option-checkbox">
+        <input type="checkbox" id="chk-grid" checked>
+        Mostrar cuadrÃ­cula guÃ­a
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label class="option-checkbox">
+        <input type="checkbox" id="chk-dots" checked>
+        Activar Canvas Matriz de Puntos
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label class="option-checkbox">
+        <input type="checkbox" id="chk-blur" checked>
+        Activar Backdrop Blur (Vidrio)
+      </label>
+    </div>
+  </div>
+
+  <!-- Toast de NotificaciÃ³n -->
+  <div id="copy-toast" class="toast-notification">Â¡Copiado al portapapeles!</div>
+
+  <!-- Carga del script del tema -->
+  <script src="theme.js"></script>
+
+  <!-- Script interactivo de la pÃ¡gina de demostraciÃ³n -->
+  <script>
+    (function () {
+      'use strict';
+      
+      // Auto-iniciar las utilidades del tema (Matriz de puntos y punteros mouse)
+      if (typeof PaguraTheme !== 'undefined') {
+        PaguraTheme.autoInit();
+      }
+
+      // 1. Control de sidebar links activos segÃºn scroll
+      var sections = document.querySelectorAll('section.pg-section');
+      var navLinks = document.querySelectorAll('.sidebar-menu a');
+
+      window.addEventListener('scroll', function () {
+        var current = '';
+        sections.forEach(function (section) {
+          var sectionTop = section.offsetTop;
+          if (pageYOffset >= sectionTop - 150) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(function (link) {
+          link.classList.remove('active');
+          if (link.getAttribute('href').substring(1) === current) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // 2. Control de presets de color de fondo
+      var colorBtns = document.querySelectorAll('.color-btn');
+      colorBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          colorBtns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          var color = btn.getAttribute('data-color');
+          document.body.style.backgroundColor = color;
+          document.querySelector('.bg-cover').style.backgroundColor = color;
+        });
+      });
+
+      // 3. Control de cuadrÃ­cula guÃ­a
+      var chkGrid = document.getElementById('chk-grid');
+      var gridEl = document.querySelector('.bg-grid');
+      chkGrid.addEventListener('change', function () {
+        gridEl.style.display = chkGrid.checked ? 'block' : 'none';
+      });
+
+      // 4. Control de canvas matriz
+      var chkDots = document.getElementById('chk-dots');
+      var dotBgEl = document.querySelector('.vw-dot-bg');
+      chkDots.addEventListener('change', function () {
+        dotBgEl.style.display = chkDots.checked ? 'block' : 'none';
+      });
+
+      // 5. Control de Backdrop Blur
+      var chkBlur = document.getElementById('chk-blur');
+      chkBlur.addEventListener('change', function () {
+        var glassElements = document.querySelectorAll('.liquid-glass-base, .vw-glow-card');
+        glassElements.forEach(function (el) {
+          if (chkBlur.checked) {
+            if (el.classList.contains('vw-glow-card')) {
+              el.style.backdropFilter = 'blur(14px)';
+              el.style.webkitBackdropFilter = 'blur(14px)';
+            } else {
+              el.style.backdropFilter = 'blur(28px) saturate(220%)';
+              el.style.webkitBackdropFilter = 'blur(28px) saturate(220%)';
+            }
+          } else {
+            el.style.backdropFilter = 'none';
+            el.style.webkitBackdropFilter = 'none';
+          }
+        });
+      });
+
+      // 6. Copiar valores de la paleta al portapapeles
+      window.copyHex = function (val) {
+        navigator.clipboard.writeText(val).then(function () {
+          showToast('Â¡Color copiado: ' + val + '!');
+        });
+      };
+
+      // 7. Copiar bloques de cÃ³digo del inspector
+      window.copySnippet = function (elementId) {
+        var codeEl = document.getElementById(elementId);
+        if (codeEl) {
+          navigator.clipboard.writeText(codeEl.innerText).then(function () {
+            showToast('Â¡CÃ³digo copiado al portapapeles!');
+          });
+        }
+      };
+
+      // 8. Cambiar entre pestaÃ±as de cÃ³digo del inspector
+      window.switchTab = function (tabName) {
+        // Desactivar botones de pestaÃ±as
+        var tabButtons = document.querySelectorAll('.code-tab-btn');
+        tabButtons.forEach(function (btn) {
+          btn.classList.remove('active');
+          if (btn.getAttribute('onclick').indexOf(tabName) !== -1) {
+            btn.classList.add('active');
+          }
+        });
+
+        // Ocultar todos los contenidos de las pestaÃ±as
+        var tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(function (content) {
+          content.style.display = 'none';
+        });
+
+        // Mostrar la pestaÃ±a seleccionada
+        var selectedTab = document.getElementById('tab-' + tabName);
+        if (selectedTab) {
+          selectedTab.style.display = 'block';
+        }
+      };
+
+      // Mostrar Toast flotante
+      function showToast(message) {
+        var toast = document.getElementById('copy-toast');
+        toast.innerText = message;
+        toast.classList.add('show');
+        setTimeout(function () {
+          toast.classList.remove('show');
+        }, 2000);
+      }
+
+    })();
+  </script>
+</body>
+</html>
+
