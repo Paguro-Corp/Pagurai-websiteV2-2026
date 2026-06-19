@@ -451,6 +451,27 @@ const COPY: Record<Lang, Copy> = {
   },
 };
 
+const BLOCK_IMAGES = [
+  "/assets/images/content/Image creator.png",
+  "/assets/images/content/Video Prodcution.png",
+  "/assets/images/content/Content automation.png",
+  "/assets/images/content/metads-paguraicard.png",
+  "/assets/images/content/Google ads.png",
+  "/assets/images/content/Trafficker.png",
+  "/assets/images/content/Landing pages.png",
+  "/assets/images/content/Connected as one system.png",
+];
+
+const PORTFOLIO_IMAGES = [
+  "/assets/images/content/Fashion_ Hero set AI Image.jpeg",
+  "/assets/images/content/Coffee brand.png",
+  "/assets/images/content/Sneakers Carrusel.png",
+  "/assets/images/content/DTC supplement.png",
+  "/assets/images/content/workflow 12 variations.png",
+  "/assets/images/content/Apparel lifestyle pack.png",
+  "/assets/images/content/Home goods.png",
+];
+
 function moveGlow(e: ReactPointerEvent<HTMLElement>) {
   const rect = e.currentTarget.getBoundingClientRect();
   e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
@@ -666,7 +687,7 @@ export default function PaguraiLanding() {
             <span>Pagurai</span>
           </a>
 
-          <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+          <div id="primary-navigation" className={`nav-links ${menuOpen ? "open" : ""}`}>
             <a href="#inicio" onClick={() => setMenuOpen(false)}>{copy.nav.home}</a>
             <a href="#servicios" onClick={() => setMenuOpen(false)}>{copy.nav.services}</a>
             <a href="#portfolio" onClick={() => setMenuOpen(false)}>{copy.nav.work}</a>
@@ -702,6 +723,7 @@ export default function PaguraiLanding() {
             type="button"
             aria-label={menuOpen ? copy.nav.closeMenu : copy.nav.openMenu}
             aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
             onClick={() => setMenuOpen((value) => !value)}
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -734,8 +756,16 @@ export default function PaguraiLanding() {
             </div>
             <div className="visual-stage">
               <div className="reel-card main-reel">
+                <video
+                  className="hero-video"
+                  src="/assets/videos/videopagurai-contentcreation2026.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
                 <span>{copy.hero.video}</span>
-                <div className="play-node"><Play size={24} fill="currentColor" /></div>
               </div>
               <div className="metric-card">
                 <BarChart3 size={20} />
@@ -771,15 +801,48 @@ export default function PaguraiLanding() {
 
           <div className="block-grid">
             {copy.blocks.items.map((block, index) => (
-              <article className={`glow-card mini ${index === 0 ? "featured" : ""}`} key={block} onPointerMove={moveGlow}>
-                <span className="card-num">{String(index + 1).padStart(2, "0")}</span>
-                <CheckCircle2 size={22} />
+              <article
+                className="glow-card mini block-card"
+                key={block}
+                tabIndex={0}
+                aria-label={block}
+                onPointerMove={moveGlow}
+              >
+                <div className="block-card-media" aria-hidden="true">
+                  <Image
+                    src={BLOCK_IMAGES[index]}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 25vw"
+                  />
+                </div>
+                <div className="block-card-scrim" aria-hidden="true" />
+                <div className="block-card-head">
+                  <span className="card-num">{String(index + 1).padStart(2, "0")}</span>
+                  <CheckCircle2 size={22} />
+                </div>
                 <h3>{block}</h3>
               </article>
             ))}
-            <article className="glow-card mini outline" onPointerMove={moveGlow}>
-              <span className="card-num">+</span>
-              <Workflow size={22} />
+            <article
+              className="glow-card mini block-card connected-card"
+              tabIndex={0}
+              aria-label={copy.blocks.connected}
+              onPointerMove={moveGlow}
+            >
+              <div className="block-card-media" aria-hidden="true">
+                <Image
+                  src={BLOCK_IMAGES[7]}
+                  alt=""
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 25vw"
+                />
+              </div>
+              <div className="block-card-scrim" aria-hidden="true" />
+              <div className="block-card-head">
+                <span className="card-num">08</span>
+                <Workflow size={22} />
+              </div>
               <h3>{copy.blocks.connected}</h3>
             </article>
           </div>
@@ -850,8 +913,21 @@ export default function PaguraiLanding() {
 
           <div className="portfolio-grid">
             {copy.portfolio.items.map(([title, tag, size], index) => (
-              <article className={`portfolio-card ${size}`} key={title} onPointerMove={moveGlow}>
+              <article
+                className={`portfolio-card ${size}`}
+                key={title}
+                tabIndex={0}
+                aria-label={title}
+                onPointerMove={moveGlow}
+              >
                 <div className="portfolio-media">
+                  <Image
+                    src={PORTFOLIO_IMAGES[index]}
+                    alt=""
+                    fill
+                    loading="eager"
+                    sizes="(max-width: 640px) 100vw, (max-width: 980px) 50vw, 33vw"
+                  />
                   <span>{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div>
