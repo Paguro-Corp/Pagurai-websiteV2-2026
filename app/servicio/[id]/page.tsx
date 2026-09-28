@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, CheckCircle2, Play, X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Play, X, ChevronLeft, ChevronRight, Sparkles, ExternalLink } from "lucide-react";
 import { ES_SERVICES, EN_SERVICES } from "@/components/servicesData";
 import { DotMatrix, moveGlow } from "@/components/PaguraiLanding";
 
@@ -17,6 +17,13 @@ export default function ServiceProjectsPage() {
   const [activeLightboxVideo, setActiveLightboxVideo] = useState<string | null>(null);
   const [activeLightboxImages, setActiveLightboxImages] = useState<string[] | null>(null);
   const [activeLightboxImageIndex, setActiveLightboxImageIndex] = useState<number>(0);
+  const [activeLightboxHtml, setActiveLightboxHtml] = useState<{ url: string; title: string; company: string } | null>(null);
+
+  // Drag-to-slide interactive state for mockups
+  const isDraggingRef = useRef(false);
+  const dragStartYRef = useRef(0);
+  const dragStartScrollTopRef = useRef(0);
+  const [isDraggingState, setIsDraggingState] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -29,7 +36,7 @@ export default function ServiceProjectsPage() {
 
   // Control dynamic body overflow locking when lightbox is active
   useEffect(() => {
-    if (activeLightboxVideo !== null || activeLightboxImages !== null) {
+    if (activeLightboxVideo !== null || activeLightboxImages !== null || activeLightboxHtml !== null) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -37,7 +44,7 @@ export default function ServiceProjectsPage() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [activeLightboxVideo, activeLightboxImages]);
+  }, [activeLightboxVideo, activeLightboxImages, activeLightboxHtml]);
 
   // Support ESC key and Arrow keys close/navigate action
   useEffect(() => {
@@ -45,6 +52,7 @@ export default function ServiceProjectsPage() {
       if (e.key === "Escape") {
         setActiveLightboxVideo(null);
         setActiveLightboxImages(null);
+        setActiveLightboxHtml(null);
       } else if (e.key === "ArrowLeft" && activeLightboxImages) {
         setActiveLightboxImageIndex((prev) => (prev > 0 ? prev - 1 : activeLightboxImages.length - 1));
       } else if (e.key === "ArrowRight" && activeLightboxImages) {
@@ -55,55 +63,45 @@ export default function ServiceProjectsPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeLightboxImages]);
 
-  // Autoscrolling logic for tall mockups in React lightbox
+  // Reset scroll to top when opening or switching mockup images (no autoscroll)
   useEffect(() => {
     if (activeLightboxImages !== null) {
-      const imgSrc = activeLightboxImages[activeLightboxImageIndex] || "";
-      const isMockup = imgSrc.includes("Landing page") || imgSrc.includes("Pagureo") || imgSrc.includes("carro") || imgSrc.includes("Lp") || imgSrc.includes("Marca") || imgSrc.includes("Dashboard") || imgSrc.includes("dashboard");
-      
-      if (isMockup) {
-        const container = document.getElementById("react-lightbox-active-img-wrapper");
-        if (!container) return;
-        
-        let autoscrollInterval: NodeJS.Timeout;
-        const startScroll = () => {
-          const scrollMax = container.scrollHeight - container.clientHeight;
-          if (scrollMax <= 0) return;
-          
-          let currentScroll = 0;
-          let direction = 1;
-          let pauseTicks = 0;
-          
-          autoscrollInterval = setInterval(() => {
-            if (pauseTicks > 0) {
-              pauseTicks--;
-              return;
-            }
-            
-            currentScroll += direction * 1.2;
-            
-            if (currentScroll >= scrollMax) {
-              currentScroll = scrollMax;
-              direction = -1;
-              pauseTicks = 70;
-            } else if (currentScroll <= 0) {
-              currentScroll = 0;
-              direction = 1;
-              pauseTicks = 70;
-            }
-            
-            container.scrollTop = currentScroll;
-          }, 16);
-        };
-        
-        const timeout = setTimeout(startScroll, 500);
-        return () => {
-          clearTimeout(timeout);
-          if (autoscrollInterval) clearInterval(autoscrollInterval);
-        };
+      const container = document.getElementById("react-lightbox-active-img-wrapper");
+      if (container) {
+        container.scrollTop = 0;
       }
     }
   }, [activeLightboxImages, activeLightboxImageIndex]);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse") {
+      if (e.button !== 0) return;
+      const container = e.currentTarget;
+      isDraggingRef.current = true;
+      dragStartYRef.current = e.clientY;
+      dragStartScrollTopRef.current = container.scrollTop;
+      setIsDraggingState(true);
+      try {
+        container.setPointerCapture(e.pointerId);
+      } catch {}
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    const deltaY = e.clientY - dragStartYRef.current;
+    e.currentTarget.scrollTop = dragStartScrollTopRef.current - deltaY;
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
+      setIsDraggingState(false);
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {}
+    }
+  };
 
   if (!mounted) return null;
 
@@ -229,6 +227,8 @@ export default function ServiceProjectsPage() {
               const handleCardClick = () => {
                 if (project.video) {
                   setActiveLightboxVideo(project.video);
+                } else if (project.html) {
+                  setActiveLightboxHtml({ url: project.html, title: project.title, company: project.company });
                 } else if (project.images) {
                   setActiveLightboxImages(project.images);
                   setActiveLightboxImageIndex(0);
@@ -412,25 +412,69 @@ export default function ServiceProjectsPage() {
               <div 
                 id="react-lightbox-active-img-wrapper" 
                 className="active-image-container"
+                onPointerDown={isMockup ? handlePointerDown : undefined}
+                onPointerMove={isMockup ? handlePointerMove : undefined}
+                onPointerUp={isMockup ? handlePointerUp : undefined}
+                onPointerCancel={isMockup ? handlePointerUp : undefined}
                 style={{ 
                   width: "100%", 
                   aspectRatio: "4 / 3", 
                   position: "relative", 
                   display: "flex", 
-                  alignItems: isMockup ? "flex-start" : "center", 
-                  justifyContent: "center", 
+                  flexDirection: isMockup ? "column" : "row",
+                  alignItems: isMockup ? "stretch" : "center", 
+                  justifyContent: isMockup ? "flex-start" : "center", 
                   background: "#02030a",
-                  overflowY: isMockup ? "auto" : "hidden"
+                  overflowY: isMockup ? "auto" : "hidden",
+                  cursor: isMockup ? (isDraggingState ? "grabbing" : "grab") : "default",
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  touchAction: isMockup ? "pan-y" : "auto"
                 }}
               >
+                {isMockup && (
+                  <div 
+                    style={{
+                      position: "sticky",
+                      top: "14px",
+                      alignSelf: "flex-end",
+                      marginRight: "14px",
+                      marginBottom: "-32px",
+                      background: "rgba(8, 9, 18, 0.8)",
+                      backdropFilter: "blur(10px)",
+                      WebkitBackdropFilter: "blur(10px)",
+                      border: "1px solid rgba(255, 255, 255, 0.14)",
+                      borderRadius: "20px",
+                      padding: "5px 14px",
+                      fontSize: "11px",
+                      fontWeight: 500,
+                      color: "var(--ink-soft)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      pointerEvents: "none",
+                      zIndex: 10,
+                      letterSpacing: "0.03em",
+                      boxShadow: "0 4px 14px rgba(0, 0, 0, 0.5)"
+                    }}
+                  >
+                    <span style={{ color: "var(--accent-color)", fontWeight: "bold" }}>↕</span>
+                    <span>{lang === "es" ? "Desliza para explorar" : "Scroll or drag to explore"}</span>
+                  </div>
+                )}
                 <img 
                   src={imgSrc} 
                   alt="Gallery Image" 
+                  draggable={false}
                   style={isMockup ? {
                     width: "100%",
                     height: "auto",
                     maxHeight: "none",
-                    objectFit: "contain"
+                    objectFit: "contain",
+                    pointerEvents: "none",
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    display: "block"
                   } : {
                     maxWidth: "100%",
                     maxHeight: "100%",
@@ -516,6 +560,120 @@ export default function ServiceProjectsPage() {
           </div>
         );
       })()}
+
+      {/* Fullscreen HTML Interactive System Lightbox Modal */}
+      {activeLightboxHtml !== null && (
+        <div 
+          className="modal-overlay" 
+          style={{ zIndex: 110, background: "rgba(2, 3, 10, 0.94)", cursor: "default" }}
+          onClick={() => setActiveLightboxHtml(null)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()} 
+            style={{ 
+              width: "min(1360px, calc(100vw - 32px))", 
+              height: "min(880px, calc(100vh - 48px))",
+              position: "relative",
+              borderRadius: "16px",
+              overflow: "hidden",
+              border: "1px solid rgba(255, 255, 255, 0.12)",
+              boxShadow: "0 24px 80px rgba(0, 0, 0, 0.9)",
+              margin: "auto",
+              display: "flex",
+              flexDirection: "column",
+              background: "#080912"
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "12px 20px",
+              background: "rgba(18, 18, 26, 0.88)",
+              borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+              zIndex: 2
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{
+                  display: "inline-block",
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  background: "var(--accent-color)",
+                  boxShadow: "0 0 10px var(--accent-color)"
+                }} />
+                <span style={{ fontSize: "12px", fontWeight: "bold", letterSpacing: "0.08em", color: "var(--accent-color)", textTransform: "uppercase" }}>
+                  {activeLightboxHtml.company}
+                </span>
+                <span style={{ color: "rgba(255, 255, 255, 0.2)" }}>·</span>
+                <span style={{ fontSize: "13px", color: "#fff", fontWeight: 500, fontFamily: "var(--font-body)" }}>
+                  {activeLightboxHtml.title}
+                </span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <a
+                  href={activeLightboxHtml.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="site-btn secondary"
+                  style={{
+                    padding: "6px 14px",
+                    fontSize: "11px",
+                    minHeight: "32px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    textDecoration: "none"
+                  }}
+                  title={lang === "es" ? "Abrir en pantalla completa" : "Open in new tab"}
+                >
+                  <span className="btn-content" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <ExternalLink size={13} />
+                    <span>{lang === "es" ? "Abrir completo" : "Open full"}</span>
+                  </span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveLightboxHtml(null)}
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    borderRadius: "50%",
+                    border: "1px solid rgba(255, 255, 255, 0.15)",
+                    background: "rgba(255, 255, 255, 0.05)",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    transition: "all 0.2s"
+                  }}
+                  aria-label="Cerrar"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Iframe displaying the HTML project */}
+            <iframe
+              src={activeLightboxHtml.url}
+              title={activeLightboxHtml.title}
+              style={{
+                width: "100%",
+                height: "100%",
+                flex: 1,
+                border: "none",
+                background: "#0a0a0f"
+              }}
+              allow="fullscreen"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

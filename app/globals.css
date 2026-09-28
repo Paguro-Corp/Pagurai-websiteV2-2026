@@ -2184,3 +2184,29 @@ main {
   }
 }
 
+/* ==========================================================================
+   10. LIGHTBOX ACTIVE IMAGE CONTAINER & SCROLLBAR
+   ========================================================================== */
+.active-image-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 152, 255, 0.4) rgba(0, 0, 0, 0.3);
+}
+
+.active-image-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.active-image-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.active-image-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 152, 255, 0.4);
+  border-radius: 3px;
+}
+
+.active-image-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 152, 255, 0.7);
+}
+
+

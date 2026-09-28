@@ -16,6 +16,7 @@ export type ProjectDetail = {
   image: string;
   video?: string;
   images?: string[];
+  html?: string;
   aspectRatio?: string;
 };
 
@@ -284,25 +285,14 @@ export const EN_SERVICES: Service[] = [
         title: "GoHighLevel Lead Automation",
         description: "Custom CRM architecture with automated sales pipelines, email sequences, and automatic lead follow-ups.",
         image: "/assets/images/projects/ghl-logo.webp",
-        images: [
-          "/assets/images/projects/automatizacion-joseph.webp",
-          "/assets/images/projects/workflow-go-high-level.webp",
-          "/assets/images/projects/ghl-1.webp",
-          "/assets/images/projects/ghl-2.webp",
-          "/assets/images/projects/ghl-3.webp",
-        ],
+        html: "/assets/images/Html%20projects/pagureo-omnichannel-sales-crm-automation-system.html",
       },
       {
         company: "Nutra Labs",
         title: "n8n Integration & Workflows",
         description: "Advanced business process automation and real-time lead synchronization between databases, webhooks, and digital advertising channels.",
         image: "/assets/images/projects/n8n-portada.webp",
-        images: [
-          "/assets/images/projects/n8n-1.webp",
-          "/assets/images/projects/n8n-2.webp",
-          "/assets/images/projects/n8n-3.webp",
-          "/assets/images/projects/n8n-logo.webp",
-        ],
+        html: "/assets/images/Html%20projects/ecommerce-ai-content-production-social-media-automation-system.html",
       },
     ],
   },
@@ -585,25 +575,14 @@ export const ES_SERVICES: Service[] = [
         title: "Automatización de Leads en GoHighLevel",
         description: "Estructura de CRM personalizada con pipelines automatizados, secuencias de email marketing y seguimiento automático de leads.",
         image: "/assets/images/projects/ghl-logo.webp",
-        images: [
-          "/assets/images/projects/automatizacion-joseph.webp",
-          "/assets/images/projects/workflow-go-high-level.webp",
-          "/assets/images/projects/ghl-1.webp",
-          "/assets/images/projects/ghl-2.webp",
-          "/assets/images/projects/ghl-3.webp",
-        ],
+        html: "/assets/images/Html%20projects/pagureo-omnichannel-sales-crm-automation-system.html",
       },
       {
         company: "Nutra Labs",
         title: "Integración y Flujos con n8n",
         description: "Automatización avanzada de procesos de negocio y sincronización en tiempo real de leads entre bases de datos, webhooks y pauta digital.",
         image: "/assets/images/projects/n8n-portada.webp",
-        images: [
-          "/assets/images/projects/n8n-1.webp",
-          "/assets/images/projects/n8n-2.webp",
-          "/assets/images/projects/n8n-3.webp",
-          "/assets/images/projects/n8n-logo.webp",
-        ],
+        html: "/assets/images/Html%20projects/ecommerce-ai-content-production-social-media-automation-system.html",
       },
     ],
   },
