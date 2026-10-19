@@ -2182,6 +2182,28 @@ main {
     padding: 20px !important;
     min-height: auto !important;
   }
+
+  .modal-overlay {
+    padding: 10px !important;
+  }
+
+  .modal-close-btn {
+    top: 12px !important;
+    right: 12px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .active-image-container {
+    height: min(52vh, 480px) !important;
+    padding: 6px !important;
+  }
+
+  .active-image-container img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+  }
 }
 
 /* ==========================================================================

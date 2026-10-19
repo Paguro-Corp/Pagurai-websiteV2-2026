@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, CheckCircle2, Play, X, ChevronLeft, ChevronRight, Sparkles, ExternalLink } from "lucide-react";
-import { ES_SERVICES, EN_SERVICES } from "@/components/servicesData";
+import { ES_SERVICES, EN_SERVICES, ProjectDetail } from "@/components/servicesData";
 import { DotMatrix, moveGlow } from "@/components/PaguraiLanding";
 
 type Lang = "en" | "es";
@@ -18,6 +18,8 @@ export default function ServiceProjectsPage() {
   const [activeLightboxImages, setActiveLightboxImages] = useState<string[] | null>(null);
   const [activeLightboxImageIndex, setActiveLightboxImageIndex] = useState<number>(0);
   const [activeLightboxHtml, setActiveLightboxHtml] = useState<{ url: string; title: string; company: string } | null>(null);
+  const [activeLightboxProject, setActiveLightboxProject] = useState<ProjectDetail | null>(null);
+  const [activeLightboxMode, setActiveLightboxMode] = useState<"static" | "carousel">("static");
 
   // Drag-to-slide interactive state for mockups
   const isDraggingRef = useRef(false);
@@ -53,6 +55,7 @@ export default function ServiceProjectsPage() {
         setActiveLightboxVideo(null);
         setActiveLightboxImages(null);
         setActiveLightboxHtml(null);
+        setActiveLightboxProject(null);
       } else if (e.key === "ArrowLeft" && activeLightboxImages) {
         setActiveLightboxImageIndex((prev) => (prev > 0 ? prev - 1 : activeLightboxImages.length - 1));
       } else if (e.key === "ArrowRight" && activeLightboxImages) {
@@ -117,6 +120,10 @@ export default function ServiceProjectsPage() {
       descEyebrow: "Detalles del servicio",
       projectEyebrow: "Casos de éxito",
       viewProject: "Ver resultados",
+      viewStatic: "Ver Estático",
+      viewCarousel: "Ver Carrusel",
+      staticMode: "Estático",
+      carouselMode: "Carrusel",
       metaTitle: "Casos de estudio y proyectos construidos.",
       closeVideo: "Cerrar video",
     },
@@ -126,6 +133,10 @@ export default function ServiceProjectsPage() {
       descEyebrow: "Service details",
       projectEyebrow: "Success cases",
       viewProject: "View results",
+      viewStatic: "View Static",
+      viewCarousel: "View Carousel",
+      staticMode: "Static",
+      carouselMode: "Carousel",
       metaTitle: "Case studies and built projects.",
       closeVideo: "Close video",
     },
@@ -224,11 +235,24 @@ export default function ServiceProjectsPage() {
           {/* 2 cuadros de proyectos */}
           <div className="projects-grid">
             {service.projectsDetail.map((project) => {
-              const handleCardClick = () => {
+              const hasMultiMode = Boolean(project.staticImage && project.carouselImages);
+
+              const openProject = (preferredMode: "static" | "carousel" = "static") => {
+                setActiveLightboxProject(project);
+
                 if (project.video) {
                   setActiveLightboxVideo(project.video);
                 } else if (project.html) {
                   setActiveLightboxHtml({ url: project.html, title: project.title, company: project.company });
+                } else if (project.staticImage && project.carouselImages) {
+                  setActiveLightboxMode(preferredMode);
+                  if (preferredMode === "static") {
+                    setActiveLightboxImages([project.staticImage]);
+                    setActiveLightboxImageIndex(0);
+                  } else {
+                    setActiveLightboxImages(project.carouselImages);
+                    setActiveLightboxImageIndex(0);
+                  }
                 } else if (project.images) {
                   setActiveLightboxImages(project.images);
                   setActiveLightboxImageIndex(0);
@@ -236,6 +260,10 @@ export default function ServiceProjectsPage() {
                   setActiveLightboxImages([project.image]);
                   setActiveLightboxImageIndex(0);
                 }
+              };
+
+              const handleCardClick = () => {
+                openProject("static");
               };
 
               return (
@@ -290,7 +318,7 @@ export default function ServiceProjectsPage() {
                     }}>
                       <Image
                         src={project.image}
-                        alt=""
+                        alt={project.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         style={{ objectFit: project.aspectRatio ? "contain" : "cover" }}
@@ -300,21 +328,56 @@ export default function ServiceProjectsPage() {
 
                     {/* Button */}
                     <div style={{ marginTop: "auto", paddingTop: "8px" }}>
-                      <button
-                        type="button"
-                        className="site-btn secondary"
-                        style={{ padding: "8px 18px", fontSize: "11px", minHeight: "36px", width: "100%", display: "flex", justifyContent: "center" }}
-                        onPointerMove={moveGlow}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCardClick();
-                        }}
-                      >
-                        <span className="btn-glow" aria-hidden="true" />
-                        <span className="btn-content">
-                          {labels.viewProject}
-                        </span>
-                      </button>
+                      {hasMultiMode ? (
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", width: "100%" }}>
+                          <button
+                            type="button"
+                            className="site-btn secondary"
+                            style={{ padding: "8px 12px", fontSize: "11px", minHeight: "36px", justifyContent: "center" }}
+                            onPointerMove={moveGlow}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openProject("static");
+                            }}
+                          >
+                            <span className="btn-glow" aria-hidden="true" />
+                            <span className="btn-content">
+                              {labels.viewStatic}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            className="site-btn secondary"
+                            style={{ padding: "8px 12px", fontSize: "11px", minHeight: "36px", justifyContent: "center" }}
+                            onPointerMove={moveGlow}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openProject("carousel");
+                            }}
+                          >
+                            <span className="btn-glow" aria-hidden="true" />
+                            <span className="btn-content">
+                              {labels.viewCarousel}
+                            </span>
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="site-btn secondary"
+                          style={{ padding: "8px 18px", fontSize: "11px", minHeight: "36px", width: "100%", display: "flex", justifyContent: "center" }}
+                          onPointerMove={moveGlow}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCardClick();
+                          }}
+                        >
+                          <span className="btn-glow" aria-hidden="true" />
+                          <span className="btn-content">
+                            {labels.viewProject}
+                          </span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </article>
@@ -333,30 +396,35 @@ export default function ServiceProjectsPage() {
       {activeLightboxVideo !== null && (
         <div 
           className="modal-overlay" 
-          style={{ zIndex: 110, background: "rgba(2, 3, 10, 0.94)", cursor: "zoom-out" }}
+          style={{ zIndex: 110, background: "rgba(2, 3, 10, 0.94)", cursor: "zoom-out", padding: "10px" }}
           onClick={() => setActiveLightboxVideo(null)}
         >
           <button
             type="button"
             className="modal-close-btn"
-            style={{ top: "30px", right: "30px", width: "44px", height: "44px" }}
+            style={{ top: "clamp(12px, 3vw, 24px)", right: "clamp(12px, 3vw, 24px)", width: "40px", height: "40px", zIndex: 120 }}
             onClick={() => setActiveLightboxVideo(null)}
             aria-label={labels.closeVideo}
           >
-            <X size={24} />
+            <X size={22} />
           </button>
 
           <div 
             onClick={(e) => e.stopPropagation()} 
             style={{ 
-              width: activeLightboxVideo.includes("1_1") || activeLightboxVideo.includes("Colombiana") ? "min(500px, calc(100vw - 40px))" : "min(1180px, calc(100vw - 40px))", 
+              width: activeLightboxVideo.includes("1_1") || activeLightboxVideo.includes("Colombiana") ? "min(500px, calc(100vw - 20px))" : "min(1180px, calc(100vw - 20px))", 
               aspectRatio: activeLightboxVideo.includes("1_1") || activeLightboxVideo.includes("Colombiana") ? "1 / 1" : "16 / 9", 
+              maxHeight: "calc(100dvh - 60px)",
               position: "relative",
               borderRadius: "16px",
               overflow: "hidden",
               border: "1px solid rgba(255, 255, 255, 0.1)",
               boxShadow: "0 24px 80px rgba(0, 0, 0, 0.85)",
-              margin: "auto"
+              margin: "auto",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "#000"
             }}
           >
             <video
@@ -365,7 +433,7 @@ export default function ServiceProjectsPage() {
               controls
               playsInline
               preload="metadata"
-              style={{ width: "100%", height: "100%", objectFit: "contain", background: "#000" }}
+              style={{ width: "100%", height: "100%", maxHeight: "calc(100dvh - 60px)", objectFit: "contain", background: "#000" }}
             />
           </div>
         </div>
@@ -376,30 +444,38 @@ export default function ServiceProjectsPage() {
         const imgSrc = activeLightboxImages[activeLightboxImageIndex] || "";
         const isMockup = imgSrc.includes("Landing page") || imgSrc.includes("Pagureo") || imgSrc.includes("carro") || imgSrc.includes("Lp") || imgSrc.includes("Marca") || imgSrc.includes("Dashboard") || imgSrc.includes("dashboard");
         const showNav = activeLightboxImages.length > 1;
+        const hasModes = Boolean(activeLightboxProject?.staticImage && activeLightboxProject?.carouselImages);
 
         return (
           <div 
             className="modal-overlay" 
-            style={{ zIndex: 110, background: "rgba(2, 3, 10, 0.94)", cursor: "zoom-out" }}
-            onClick={() => setActiveLightboxImages(null)}
+            style={{ zIndex: 110, background: "rgba(2, 3, 10, 0.94)", cursor: "zoom-out", padding: "10px" }}
+            onClick={() => {
+              setActiveLightboxImages(null);
+              setActiveLightboxProject(null);
+            }}
           >
             <button
               type="button"
               className="modal-close-btn"
-              style={{ top: "30px", right: "30px", width: "44px", height: "44px" }}
-              onClick={() => setActiveLightboxImages(null)}
+              style={{ top: "clamp(12px, 3vw, 24px)", right: "clamp(12px, 3vw, 24px)", width: "40px", height: "40px", zIndex: 120 }}
+              onClick={() => {
+                setActiveLightboxImages(null);
+                setActiveLightboxProject(null);
+              }}
             >
-              <X size={24} />
+              <X size={22} />
             </button>
 
             <div 
               onClick={(e) => e.stopPropagation()} 
               style={{ 
-                width: "min(800px, calc(100vw - 40px))", 
+                width: "min(860px, calc(100vw - 20px))", 
+                maxHeight: "calc(100dvh - 24px)",
                 position: "relative",
                 borderRadius: "16px",
                 overflow: "hidden",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
                 boxShadow: "0 24px 80px rgba(0, 0, 0, 0.85)",
                 margin: "auto",
                 display: "flex",
@@ -408,6 +484,116 @@ export default function ServiceProjectsPage() {
                 cursor: "default"
               }}
             >
+              {/* Header Bar showing Company / Title */}
+              {activeLightboxProject && (
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "12px 20px",
+                  background: "rgba(14, 16, 26, 0.96)",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                  zIndex: 10,
+                  gap: "12px",
+                  flexWrap: "wrap"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span style={{
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: service.accent === "pink" ? "var(--pink-neon)" : "var(--accent-color, #0098ff)",
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase"
+                    }}>
+                      {activeLightboxProject?.company}
+                    </span>
+                    <span style={{ color: "rgba(255, 255, 255, 0.25)", fontSize: "12px" }}>/</span>
+                    <span style={{ fontSize: "12px", color: "#fff", fontWeight: 600 }}>
+                      {activeLightboxProject?.title}
+                    </span>
+                  </div>
+
+                  {/* Switcher tabs */}
+                  {hasModes && (
+                    <div style={{
+                      display: "inline-flex",
+                      padding: "3px",
+                      borderRadius: "9999px",
+                      background: "rgba(0, 0, 0, 0.65)",
+                      border: "1px solid rgba(255, 255, 255, 0.12)",
+                      gap: "4px"
+                    }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveLightboxMode("static");
+                          setActiveLightboxImages([activeLightboxProject!.staticImage!]);
+                          setActiveLightboxImageIndex(0);
+                        }}
+                        style={{
+                          padding: "6px 18px",
+                          borderRadius: "9999px",
+                          border: "none",
+                          fontSize: "11.5px",
+                          fontWeight: 600,
+                          letterSpacing: "0.04em",
+                          cursor: "pointer",
+                          transition: "all 0.25s ease",
+                          background: activeLightboxMode === "static"
+                            ? "linear-gradient(135deg, #0098ff 0%, #0070cc 100%)"
+                            : "transparent",
+                          color: activeLightboxMode === "static" ? "#ffffff" : "var(--ink-muted)",
+                          boxShadow: activeLightboxMode === "static" ? "0 0 16px rgba(0, 152, 255, 0.5)" : "none",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px"
+                        }}
+                      >
+                        <span>{labels.staticMode}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveLightboxMode("carousel");
+                          setActiveLightboxImages(activeLightboxProject!.carouselImages!);
+                          setActiveLightboxImageIndex(0);
+                        }}
+                        style={{
+                          padding: "6px 18px",
+                          borderRadius: "9999px",
+                          border: "none",
+                          fontSize: "11.5px",
+                          fontWeight: 600,
+                          letterSpacing: "0.04em",
+                          cursor: "pointer",
+                          transition: "all 0.25s ease",
+                          background: activeLightboxMode === "carousel"
+                            ? "linear-gradient(135deg, #0098ff 0%, #0070cc 100%)"
+                            : "transparent",
+                          color: activeLightboxMode === "carousel" ? "#ffffff" : "var(--ink-muted)",
+                          boxShadow: activeLightboxMode === "carousel" ? "0 0 16px rgba(0, 152, 255, 0.5)" : "none",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px"
+                        }}
+                      >
+                        <span>{labels.carouselMode}</span>
+                        <span style={{
+                          fontSize: "10px",
+                          padding: "1px 6px",
+                          borderRadius: "10px",
+                          background: activeLightboxMode === "carousel" ? "rgba(255, 255, 255, 0.28)" : "rgba(255, 255, 255, 0.1)",
+                          color: "#fff"
+                        }}>
+                          {activeLightboxProject?.carouselImages?.length || 0}
+                        </span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Active Image Container */}
               <div 
                 id="react-lightbox-active-img-wrapper" 
@@ -418,18 +604,22 @@ export default function ServiceProjectsPage() {
                 onPointerCancel={isMockup ? handlePointerUp : undefined}
                 style={{ 
                   width: "100%", 
-                  aspectRatio: "4 / 3", 
+                  aspectRatio: isMockup ? "4 / 3" : undefined,
+                  height: isMockup ? undefined : "min(54vh, 520px)",
                   position: "relative", 
                   display: "flex", 
                   flexDirection: isMockup ? "column" : "row",
-                  alignItems: isMockup ? "stretch" : "center", 
+                  alignItems: "center", 
                   justifyContent: isMockup ? "flex-start" : "center", 
                   background: "#02030a",
                   overflowY: isMockup ? "auto" : "hidden",
                   cursor: isMockup ? (isDraggingState ? "grabbing" : "grab") : "default",
                   userSelect: "none",
                   WebkitUserSelect: "none",
-                  touchAction: isMockup ? "pan-y" : "auto"
+                  touchAction: isMockup ? "pan-y" : "auto",
+                  padding: isMockup ? 0 : "8px",
+                  flex: 1,
+                  minHeight: 0
                 }}
               >
                 {isMockup && (
@@ -478,7 +668,10 @@ export default function ServiceProjectsPage() {
                   } : {
                     maxWidth: "100%",
                     maxHeight: "100%",
-                    objectFit: "contain"
+                    width: "auto",
+                    height: "auto",
+                    objectFit: "contain",
+                    display: "block"
                   }}
                 />
 
@@ -487,17 +680,17 @@ export default function ServiceProjectsPage() {
                     {/* Prev Button */}
                     <button 
                       onClick={() => setActiveLightboxImageIndex((prev) => (prev > 0 ? prev - 1 : activeLightboxImages.length - 1))}
-                      style={{ position: "absolute", left: "16px", width: "44px", height: "44px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(0,0,0,0.5)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s", zIndex: 5 }}
+                      style={{ position: "absolute", left: "10px", width: "38px", height: "38px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(0,0,0,0.5)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s", zIndex: 5 }}
                     >
-                      <ChevronLeft size={20} />
+                      <ChevronLeft size={18} />
                     </button>
                     
                     {/* Next Button */}
                     <button 
                       onClick={() => setActiveLightboxImageIndex((prev) => (prev < activeLightboxImages.length - 1 ? prev + 1 : 0))}
-                      style={{ position: "absolute", right: "16px", width: "44px", height: "44px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(0,0,0,0.5)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s", zIndex: 5 }}
+                      style={{ position: "absolute", right: "10px", width: "38px", height: "38px", borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(0,0,0,0.5)", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.2s", zIndex: 5 }}
                     >
-                      <ChevronRight size={20} />
+                      <ChevronRight size={18} />
                     </button>
                   </>
                 )}
@@ -506,7 +699,7 @@ export default function ServiceProjectsPage() {
               {showNav && (
                 <>
                   {/* Thumbnails strip */}
-                  <div style={{ display: "flex", gap: "10px", padding: "12px 16px", background: "rgba(0, 0, 0, 0.4)", overflowX: "auto", borderTop: "1px solid rgba(255, 255, 255, 0.06)", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                  <div style={{ display: "flex", gap: "8px", padding: "8px 12px", background: "rgba(0, 0, 0, 0.4)", overflowX: "auto", borderTop: "1px solid rgba(255, 255, 255, 0.06)", justifyContent: "center", alignItems: "center", width: "100%", WebkitOverflowScrolling: "touch" }}>
                     {activeLightboxImages.map((thumbSrc, idx) => {
                       const isActive = idx === activeLightboxImageIndex;
                       return (
@@ -514,15 +707,15 @@ export default function ServiceProjectsPage() {
                           key={thumbSrc}
                           onClick={() => setActiveLightboxImageIndex(idx)}
                           style={{
-                            width: "72px",
-                            height: "54px",
-                            borderRadius: "8px",
+                            width: "60px",
+                            height: "45px",
+                            borderRadius: "7px",
                             overflow: "hidden",
                             cursor: "pointer",
                             transition: "all 0.25s ease",
-                            border: `2.5px solid ${isActive ? "#0098ff" : "rgba(255,255,255,0.12)"}`,
-                            transform: isActive ? "scale(1.08)" : "scale(1)",
-                            boxShadow: isActive ? "0 0 12px rgba(0, 152, 255, 0.45)" : "none",
+                            border: `2px solid ${isActive ? "#0098ff" : "rgba(255,255,255,0.12)"}`,
+                            transform: isActive ? "scale(1.06)" : "scale(1)",
+                            boxShadow: isActive ? "0 0 10px rgba(0, 152, 255, 0.45)" : "none",
                             flexShrink: 0,
                             opacity: isActive ? 1 : 0.62
                           }}
@@ -534,7 +727,7 @@ export default function ServiceProjectsPage() {
                   </div>
 
                   {/* Bullet indicator footer */}
-                  <div style={{ padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255, 255, 255, 0.06)", fontFamily: "var(--font-body)" }}>
+                  <div style={{ padding: "8px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid rgba(255, 255, 255, 0.06)", fontFamily: "var(--font-body)" }}>
                     <span style={{ color: "var(--ink-soft)", fontSize: "13px" }}>{activeLightboxImageIndex + 1} / {activeLightboxImages.length}</span>
                     <div style={{ display: "flex", gap: "6px" }}>
                       {activeLightboxImages.map((_, idx) => (
