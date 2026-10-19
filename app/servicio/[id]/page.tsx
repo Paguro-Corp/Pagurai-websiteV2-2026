@@ -605,20 +605,23 @@ export default function ServiceProjectsPage() {
                 style={{ 
                   width: "100%", 
                   aspectRatio: isMockup ? "4 / 3" : undefined,
-                  height: isMockup ? undefined : "min(54vh, 520px)",
+                  height: isMockup ? undefined : "min(70vh, 620px)",
+                  maxHeight: isMockup ? undefined : "min(70vh, 620px)",
                   position: "relative", 
                   display: "flex", 
                   flexDirection: isMockup ? "column" : "row",
                   alignItems: "center", 
                   justifyContent: isMockup ? "flex-start" : "center", 
                   background: "#02030a",
+                  overflow: isMockup ? undefined : "hidden",
                   overflowY: isMockup ? "auto" : "hidden",
+                  overflowX: "hidden",
                   cursor: isMockup ? (isDraggingState ? "grabbing" : "grab") : "default",
                   userSelect: "none",
                   WebkitUserSelect: "none",
                   touchAction: isMockup ? "pan-y" : "auto",
-                  padding: isMockup ? 0 : "8px",
-                  flex: 1,
+                  padding: isMockup ? 0 : "12px",
+                  flex: isMockup ? 1 : "0 1 auto",
                   minHeight: 0
                 }}
               >
@@ -667,11 +670,12 @@ export default function ServiceProjectsPage() {
                     display: "block"
                   } : {
                     maxWidth: "100%",
-                    maxHeight: "100%",
+                    maxHeight: "min(70vh, 620px)",
                     width: "auto",
                     height: "auto",
                     objectFit: "contain",
-                    display: "block"
+                    display: "block",
+                    margin: "auto"
                   }}
                 />
 
@@ -699,7 +703,24 @@ export default function ServiceProjectsPage() {
               {showNav && (
                 <>
                   {/* Thumbnails strip */}
-                  <div style={{ display: "flex", gap: "8px", padding: "8px 12px", background: "rgba(0, 0, 0, 0.4)", overflowX: "auto", borderTop: "1px solid rgba(255, 255, 255, 0.06)", justifyContent: "center", alignItems: "center", width: "100%", WebkitOverflowScrolling: "touch" }}>
+                  <div 
+                    className="gallery-thumbnails"
+                    style={{ 
+                      display: "flex", 
+                      gap: "8px", 
+                      padding: "10px 12px", 
+                      background: "rgba(0, 0, 0, 0.4)", 
+                      overflowX: "auto", 
+                      overflowY: "hidden",
+                      borderTop: "1px solid rgba(255, 255, 255, 0.06)", 
+                      justifyContent: "center", 
+                      alignItems: "center", 
+                      width: "100%", 
+                      WebkitOverflowScrolling: "touch",
+                      scrollbarWidth: "none",
+                      msOverflowStyle: "none"
+                    }}
+                  >
                     {activeLightboxImages.map((thumbSrc, idx) => {
                       const isActive = idx === activeLightboxImageIndex;
                       return (
@@ -714,13 +735,13 @@ export default function ServiceProjectsPage() {
                             cursor: "pointer",
                             transition: "all 0.25s ease",
                             border: `2px solid ${isActive ? "#0098ff" : "rgba(255,255,255,0.12)"}`,
-                            transform: isActive ? "scale(1.06)" : "scale(1)",
+                            transform: isActive ? "scale(1.05)" : "scale(1)",
                             boxShadow: isActive ? "0 0 10px rgba(0, 152, 255, 0.45)" : "none",
                             flexShrink: 0,
                             opacity: isActive ? 1 : 0.62
                           }}
                         >
-                          <img src={thumbSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          <img src={thumbSrc} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                         </div>
                       );
                     })}
